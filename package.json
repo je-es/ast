@@ -1,0 +1,45 @@
+{
+	"name": "@je-es/ast",
+	"version": "0.0.1",
+	"description": "A library for building and managing Abstract Syntax Trees.",
+	"keywords": [ "je-es", "ast", "program", "module", "statements", "exressions", "types" ],
+	"license": "MIT",
+	"main": "./dist/ast.js",
+	"module": "./dist/ast.mjs",
+	"types": "./dist/ast.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"test": "tsup && jest",
+		"build": "tsup",
+		"app": "tsup && node ./dist/ast.js"
+	},
+	"author": {
+		"name": "Maysara Elshewehy",
+		"email": "maysara.elshewehy@gmail.com",
+		"url": "https://github.com/maysara-elshewehy"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/je-es/ast.git"
+	},
+	"bugs": {
+		"url": "https://github.com/je-es/ast/issues"
+	},
+	"homepage": "https://github.com/je-es/ast#readme",
+	"devDependencies": {
+		"@types/jest": "^29.5.12",
+		"@types/node": "^20.12.7",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.1.2",
+		"ts-node": "^10.9.2",
+		"tsup": "^8.0.2",
+		"typescript": "^5.4.5",
+		"@eslint/js": "^9.34.0",
+		"@stylistic/eslint-plugin": "^5.3.1",
+		"typescript-eslint": "^8.42.0"
+	},
+	"dependencies": {
+	}
+}
