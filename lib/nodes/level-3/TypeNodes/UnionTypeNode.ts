@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Union' as const;
+            public kind = 'union' as const;
             public level = 3;
 
             constructor(

@@ -122,11 +122,13 @@ import { ParenTypeNode } from '../level-3/TypeNodes/ParenTypeNode';
             getTuple()          : TupleTypeNode     | undefined { return this.is('tuple')       ? this.source as TupleTypeNode      : undefined; }
             getFunction()       : FunctionTypeNode  | undefined { return this.is('function')    ? this.source as FunctionTypeNode   : undefined; }
             getStruct()         : StructTypeNode    | undefined { return this.is('struct')      ? this.source as StructTypeNode     : undefined; }
-            getErrset()         : ErrsetTypeNode    | undefined { return this.is('errset')      ? this.source as ErrsetTypeNode      : undefined; }
+            getErrset()         : ErrsetTypeNode    | undefined { return this.is('errset')      ? this.source as ErrsetTypeNode     : undefined; }
             getEnum()           : EnumTypeNode      | undefined { return this.is('enum')        ? this.source as EnumTypeNode       : undefined; }
             getUnion()          : UnionTypeNode     | undefined { return this.is('union')       ? this.source as UnionTypeNode      : undefined; }
             getParen()          : ParenTypeNode     | undefined { return this.is('paren')       ? this.source as ParenTypeNode      : undefined; }
             getIdent()          : IdentNode         | undefined { return this.is('ident')       ? this.source as IdentNode          : undefined; }
+            getErrName()        : string            | undefined { return this.is('primitive')   ? this.getPrimitive()!.text         : undefined; }
+            getErrSpan()        : Span              | undefined { return this.is('primitive')   ? this.getPrimitive()!.span         : undefined; }
             getWidth()          : number            | undefined { return this.is('primitive')   ? this.getPrimitive()!.width        : undefined; }
 
         // └────────────────────────────────────────────────────────────────────┘

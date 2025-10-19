@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Enum' as const;
+            public kind = 'enum' as const;
             public level = 3;
 
             constructor(

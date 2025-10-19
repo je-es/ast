@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Optional' as const;
+            public kind = 'optional' as const;
             public level = 3;
 
             constructor(

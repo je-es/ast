@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Tuple' as const;
+            public kind = 'tuple' as const;
             public level = 3;
 
             constructor(

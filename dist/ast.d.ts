@@ -153,7 +153,7 @@ declare class PrimitiveTypeNode extends Node {
 declare class OptionalTypeNode extends Node {
     span: Span;
     target: TypeNode;
-    kind: "Optional";
+    kind: "optional";
     level: number;
     constructor(span: Span, target: TypeNode);
     getChildrenNodes(): Node[];
@@ -166,7 +166,7 @@ declare class PointerTypeNode extends Node {
     span: Span;
     target: TypeNode;
     mutable: boolean;
-    kind: "Pointer";
+    kind: "pointer";
     level: number;
     constructor(span: Span, target: TypeNode, mutable: boolean);
     getChildrenNodes(): Node[];
@@ -180,7 +180,7 @@ declare class ArrayTypeNode extends Node {
     target: TypeNode;
     size: ExprNode | undefined;
     mutable: boolean;
-    kind: "Array";
+    kind: "array";
     level: number;
     constructor(span: Span, target: TypeNode, size: ExprNode | undefined, mutable: boolean);
     getChildrenNodes(): Node[];
@@ -195,7 +195,7 @@ declare class ArrayTypeNode extends Node {
 declare class TupleTypeNode extends Node {
     span: Span;
     fields: TypeNode[];
-    kind: "Tuple";
+    kind: "tuple";
     level: number;
     constructor(span: Span, fields: TypeNode[]);
     getChildrenNodes(): Node[];
@@ -209,7 +209,7 @@ declare class FunctionTypeNode extends Node {
     params: TypeNode[];
     returnType: TypeNode | undefined;
     errorType: TypeNode | undefined;
-    kind: "Function";
+    kind: "function";
     level: number;
     constructor(span: Span, params: TypeNode[], returnType: TypeNode | undefined, errorType: TypeNode | undefined);
     getChildrenNodes(): Node[];
@@ -223,7 +223,7 @@ declare class StructTypeNode extends Node {
     members: StructMemberNode[];
     name: string;
     metadata: Record<string, unknown>;
-    kind: "Struct";
+    kind: "struct";
     level: number;
     constructor(span: Span, members: StructMemberNode[], name: string | undefined, metadata: Record<string, unknown>);
     getChildrenNodes(): Node[];
@@ -237,7 +237,7 @@ declare class EnumTypeNode extends Node {
     variants: EnumVariantNode[];
     name: string;
     metadata: Record<string, unknown>;
-    kind: "Enum";
+    kind: "enum";
     level: number;
     constructor(span: Span, variants: EnumVariantNode[], name: string | undefined, metadata: Record<string, unknown>);
     getChildrenNodes(): Node[];
@@ -249,7 +249,7 @@ declare class EnumTypeNode extends Node {
 declare class UnionTypeNode extends Node {
     span: Span;
     types: TypeNode[];
-    kind: "Union";
+    kind: "union";
     level: number;
     constructor(span: Span, types: TypeNode[]);
     getChildrenNodes(): Node[];
@@ -306,7 +306,7 @@ declare class ErrsetTypeNode extends Node {
 declare class ParenTypeNode extends Node {
     span: Span;
     type: TypeNode;
-    kind: "Paren";
+    kind: "paren";
     level: number;
     constructor(span: Span, type: TypeNode);
     getChildrenNodes(): Node[];
@@ -369,6 +369,8 @@ declare class TypeNode extends Node {
     getUnion(): UnionTypeNode | undefined;
     getParen(): ParenTypeNode | undefined;
     getIdent(): IdentNode | undefined;
+    getErrName(): string | undefined;
+    getErrSpan(): Span | undefined;
     getWidth(): number | undefined;
     static asUnset(span?: Span): TypeNode;
     static asPrimitive(span: Span | undefined, kind: PrimitiveKind, text?: string, width?: number): TypeNode;

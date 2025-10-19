@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Function' as const;
+            public kind = 'function' as const;
             public level = 3;
 
             constructor(

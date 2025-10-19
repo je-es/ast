@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Pointer' as const;
+            public kind = 'pointer' as const;
             public level = 3;
 
             constructor(

@@ -1344,7 +1344,7 @@ var OptionalTypeNode = class _OptionalTypeNode extends Node {
     this.span = span;
     this.target = target;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Optional";
+    this.kind = "optional";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1377,7 +1377,7 @@ var PointerTypeNode = class _PointerTypeNode extends Node {
     this.target = target;
     this.mutable = mutable;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Pointer";
+    this.kind = "pointer";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1411,7 +1411,7 @@ var ArrayTypeNode = class _ArrayTypeNode extends Node {
     this.size = size;
     this.mutable = mutable;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Array";
+    this.kind = "array";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1460,7 +1460,7 @@ var TupleTypeNode = class _TupleTypeNode extends Node {
     this.span = span;
     this.fields = fields;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Tuple";
+    this.kind = "tuple";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1494,7 +1494,7 @@ var FunctionTypeNode = class _FunctionTypeNode extends Node {
     this.returnType = returnType;
     this.errorType = errorType;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Function";
+    this.kind = "function";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1536,7 +1536,7 @@ var StructTypeNode = class _StructTypeNode extends Node {
     this.name = name;
     this.metadata = metadata;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Struct";
+    this.kind = "struct";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1572,7 +1572,7 @@ var EnumTypeNode = class _EnumTypeNode extends Node {
     this.name = name;
     this.metadata = metadata;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Enum";
+    this.kind = "enum";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1606,7 +1606,7 @@ var UnionTypeNode = class _UnionTypeNode extends Node {
     this.span = span;
     this.types = types;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Union";
+    this.kind = "union";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1674,7 +1674,7 @@ var ParenTypeNode = class _ParenTypeNode extends Node {
     this.span = span;
     this.type = type;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Paren";
+    this.kind = "paren";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1848,6 +1848,12 @@ var TypeNode = class _TypeNode extends Node {
   }
   getIdent() {
     return this.is("ident") ? this.source : void 0;
+  }
+  getErrName() {
+    return this.is("primitive") ? this.getPrimitive().text : void 0;
+  }
+  getErrSpan() {
+    return this.is("primitive") ? this.getPrimitive().span : void 0;
   }
   getWidth() {
     return this.is("primitive") ? this.getPrimitive().width : void 0;

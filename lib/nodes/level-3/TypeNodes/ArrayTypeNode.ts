@@ -20,7 +20,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Array' as const;
+            public kind = 'array' as const;
             public level = 3;
 
             constructor(

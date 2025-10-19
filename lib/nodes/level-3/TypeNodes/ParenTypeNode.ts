@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Paren' as const;
+            public kind = 'paren' as const;
             public level = 3;
 
             constructor(

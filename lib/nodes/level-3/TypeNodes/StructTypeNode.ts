@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Struct' as const;
+            public kind = 'struct' as const;
             public level = 3;
 
             constructor(
