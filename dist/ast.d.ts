@@ -364,7 +364,7 @@ declare class TypeNode extends Node {
     getTuple(): TupleTypeNode | undefined;
     getFunction(): FunctionTypeNode | undefined;
     getStruct(): StructTypeNode | undefined;
-    getError(): ErrsetTypeNode | undefined;
+    getErrset(): ErrsetTypeNode | undefined;
     getEnum(): EnumTypeNode | undefined;
     getUnion(): UnionTypeNode | undefined;
     getParen(): ParenTypeNode | undefined;

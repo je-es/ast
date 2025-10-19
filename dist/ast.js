@@ -1834,7 +1834,7 @@ var TypeNode = class _TypeNode extends Node {
   getStruct() {
     return this.is("struct") ? this.source : void 0;
   }
-  getError() {
+  getErrset() {
     return this.is("errset") ? this.source : void 0;
   }
   getEnum() {
