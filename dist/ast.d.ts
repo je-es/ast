@@ -572,17 +572,17 @@ declare class DefaultNode extends Node {
     static create(span: Span, stmt: StmtNode, hasBreak?: boolean | undefined): DefaultNode;
 }
 
-declare class SwitchNode extends Node {
+declare class MatchNode extends Node {
     span: Span;
     condExpr: ExprNode;
     cases: CaseNode[];
     defCase: DefaultNode | null;
-    kind: "Switch";
+    kind: "Match";
     level: number;
     constructor(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null);
     getChildrenNodes(): Node[];
-    clone(newSpan?: Span): SwitchNode;
-    static create(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null): SwitchNode;
+    clone(newSpan?: Span): MatchNode;
+    static create(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null): MatchNode;
 }
 
 declare class CatchNode extends Node {
@@ -680,8 +680,8 @@ declare class SizeofNode extends Node {
     static create(span: Span, expr: ExprNode): SizeofNode;
 }
 
-type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Switch' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof';
-type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | SwitchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode;
+type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Match' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof';
+type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | MatchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode;
 declare class ExprNode extends Node {
     kind: ExprKind;
     span: Span;
@@ -696,7 +696,7 @@ declare class ExprNode extends Node {
     getBinary(): BinaryNode | undefined;
     getConditional(): ConditionalNode | undefined;
     getIf(): IfNode | undefined;
-    getSwitch(): SwitchNode | undefined;
+    getMatch(): MatchNode | undefined;
     getCatch(): CatchNode | undefined;
     getTry(): TryNode | undefined;
     getRange(): RangeNode | undefined;
@@ -758,7 +758,7 @@ declare class ExprNode extends Node {
     static asBinary(span: Span, left: ExprNode, operator: string, right: ExprNode): ExprNode;
     static asConditional(span: Span, condExpr: ExprNode, trueExpr: ExprNode, falseExpr: ExprNode): ExprNode;
     static asIf(span: Span, condExpr: ExprNode, thenStmt: StmtNode, elseStmt: StmtNode | null): ExprNode;
-    static asSwitch(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null): ExprNode;
+    static asMatch(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null): ExprNode;
     static asCatch(span: Span, leftExpr: ExprNode, tag: ExprNode | null, rightStmt: StmtNode): ExprNode;
     static asTry(span: Span, expr: ExprNode): ExprNode;
     static asRange(span: Span, leftExpr: ExprNode | null, rangeType: string, rightExpr: ExprNode | null): ExprNode;
@@ -997,4 +997,4 @@ declare class Program {
     getTotalNodes(): number;
 }
 
-export { ArrayAccessNode, ArrayTypeNode, AsNode, BinaryNode, BlockStmtNode, CallNode, CaseNode, CatchNode, type ComptimeInfo, type ComptimeKind, ConditionalNode, ControlFlowStmtNode, DefStmtNode, DefaultNode, EnumTypeNode, EnumVariantNode, ErrsetTypeNode, ExprNode, ExprTupleNode, FieldNode, FuncStmtNode, FunctionTypeNode, IdentNode, IfNode, LetStmtNode, LiteralNode, LoopStmtNode, MemberAccessNode, Module, type MutabilityInfo, type MutabilityKind, type NameInfo, Node, ObjectNode, OptionalTypeNode, OrelseNode, ParenNode, ParenTypeNode, PointerTypeNode, PostfixNode, PrefixNode, PrimaryNode, PrimitiveTypeNode, Program, PropNode, RangeNode, SizeofNode, type Span, StmtNode, StructMemberNode, StructTypeNode, SwitchNode, TestStmtNode, TryNode, TupleTypeNode, TypeNode, TypeofNode, UnionTypeNode, UseStmtNode, type VisibilityInfo, type VisibilityKind };
+export { ArrayAccessNode, ArrayTypeNode, AsNode, BinaryNode, BlockStmtNode, CallNode, CaseNode, CatchNode, type ComptimeInfo, type ComptimeKind, ConditionalNode, ControlFlowStmtNode, DefStmtNode, DefaultNode, EnumTypeNode, EnumVariantNode, ErrsetTypeNode, ExprNode, ExprTupleNode, FieldNode, FuncStmtNode, FunctionTypeNode, IdentNode, IfNode, LetStmtNode, LiteralNode, LoopStmtNode, MatchNode, MemberAccessNode, Module, type MutabilityInfo, type MutabilityKind, type NameInfo, Node, ObjectNode, OptionalTypeNode, OrelseNode, ParenNode, ParenTypeNode, PointerTypeNode, PostfixNode, PrefixNode, PrimaryNode, PrimitiveTypeNode, Program, PropNode, RangeNode, SizeofNode, type Span, StmtNode, StructMemberNode, StructTypeNode, TestStmtNode, TryNode, TupleTypeNode, TypeNode, TypeofNode, UnionTypeNode, UseStmtNode, type VisibilityInfo, type VisibilityKind };

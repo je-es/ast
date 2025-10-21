@@ -17,11 +17,11 @@
 
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class SwitchNode extends Node  {
+    export class MatchNode extends Node  {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Switch' as const;
+            public kind = 'Match' as const;
             public level = 3;
 
             constructor(
@@ -54,8 +54,8 @@
                 return children;
             }
 
-            clone(newSpan?: Span): SwitchNode {
-                const cloned = new SwitchNode(newSpan || this.span, this.condExpr, this.cases, this.defCase);
+            clone(newSpan?: Span): MatchNode {
+                const cloned = new MatchNode(newSpan || this.span, this.condExpr, this.cases, this.defCase);
                 return cloned;
             }
 
@@ -64,8 +64,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null): SwitchNode {
-                return new SwitchNode(span, condExpr, cases, defCase);
+            static create(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null): MatchNode {
+                return new MatchNode(span, condExpr, cases, defCase);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

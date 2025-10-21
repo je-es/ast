@@ -2325,8 +2325,8 @@ var IfNode = class _IfNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
 };
 
-// lib/nodes/level-3/ExprNodes/SwitchNode.ts
-var SwitchNode = class _SwitchNode extends Node {
+// lib/nodes/level-3/ExprNodes/MatchNode.ts
+var MatchNode = class _MatchNode extends Node {
   constructor(span, condExpr, cases, defCase) {
     super();
     this.span = span;
@@ -2334,7 +2334,7 @@ var SwitchNode = class _SwitchNode extends Node {
     this.cases = cases;
     this.defCase = defCase;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Switch";
+    this.kind = "Match";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2351,13 +2351,13 @@ var SwitchNode = class _SwitchNode extends Node {
     return children;
   }
   clone(newSpan) {
-    const cloned = new _SwitchNode(newSpan || this.span, this.condExpr, this.cases, this.defCase);
+    const cloned = new _MatchNode(newSpan || this.span, this.condExpr, this.cases, this.defCase);
     return cloned;
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
   static create(span, condExpr, cases, defCase) {
-    return new _SwitchNode(span, condExpr, cases, defCase);
+    return new _MatchNode(span, condExpr, cases, defCase);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -2720,8 +2720,8 @@ var ExprNode = class _ExprNode extends Node {
   getIf() {
     return this.is("If") ? this.data : void 0;
   }
-  getSwitch() {
-    return this.is("Switch") ? this.data : void 0;
+  getMatch() {
+    return this.is("Match") ? this.data : void 0;
   }
   getCatch() {
     return this.is("Catch") ? this.data : void 0;
@@ -2912,8 +2912,8 @@ var ExprNode = class _ExprNode extends Node {
   static asIf(span, condExpr, thenStmt, elseStmt) {
     return new _ExprNode("If", span, IfNode.create(span || DEF_SPAN, condExpr, thenStmt, elseStmt));
   }
-  static asSwitch(span, condExpr, cases, defCase) {
-    return new _ExprNode("Switch", span, SwitchNode.create(span || DEF_SPAN, condExpr, cases, defCase));
+  static asMatch(span, condExpr, cases, defCase) {
+    return new _ExprNode("Match", span, MatchNode.create(span || DEF_SPAN, condExpr, cases, defCase));
   }
   static asCatch(span, leftExpr, tag, rightStmt) {
     return new _ExprNode("Catch", span, CatchNode.create(span || DEF_SPAN, leftExpr, tag, rightStmt));
@@ -3141,6 +3141,7 @@ export {
   LetStmtNode,
   LiteralNode,
   LoopStmtNode,
+  MatchNode,
   MemberAccessNode,
   Module,
   Node,
@@ -3161,7 +3162,6 @@ export {
   StmtNode,
   StructMemberNode,
   StructTypeNode,
-  SwitchNode,
   TestStmtNode,
   TryNode,
   TupleTypeNode,

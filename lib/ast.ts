@@ -45,7 +45,7 @@
     export { PrefixNode }           from './nodes/level-3/ExprNodes/PrefixNode';
     export { PrimaryNode }          from './nodes/level-3/ExprNodes/PrimaryNode';
     export { RangeNode }            from './nodes/level-3/ExprNodes/RangeNode';
-    export { SwitchNode }           from './nodes/level-3/ExprNodes/SwitchNode';
+    export { MatchNode }            from './nodes/level-3/ExprNodes/MatchNode';
     export { TryNode }              from './nodes/level-3/ExprNodes/TryNode';
     export { AsNode }               from './nodes/level-3/ExprNodes/AsNode';
 

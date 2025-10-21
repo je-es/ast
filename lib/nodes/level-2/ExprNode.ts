@@ -14,9 +14,9 @@
     import { PostfixNode }                                  from '../level-3/ExprNodes/PostfixNode';
     import { PrefixNode }                                   from '../level-3/ExprNodes/PrefixNode';
     import { BinaryNode }                                   from '../level-3/ExprNodes/BinaryNode';
-    import { ConditionalNode as CondNode }                  from '../level-3/ExprNodes/ConditionalNode';
+    import { ConditionalNode }                              from '../level-3/ExprNodes/ConditionalNode';
     import { IfNode }                                       from '../level-3/ExprNodes/IfNode';
-    import { SwitchNode }                                   from '../level-3/ExprNodes/SwitchNode';
+    import { MatchNode }                                    from '../level-3/ExprNodes/MatchNode';
     import { CatchNode }                                    from '../level-3/ExprNodes/CatchNode';
     import { TryNode }                                      from '../level-3/ExprNodes/TryNode';
     import { RangeNode }                                    from '../level-3/ExprNodes/RangeNode';
@@ -44,16 +44,16 @@
 // ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
 
     export type ExprKind =
-    | 'Unset'       | 'Primary'     | 'Postfix'     | 'Prefix'
-    | 'Binary'      | 'Cond'        | 'If'          | 'Switch'
-    | 'Catch'       | 'Try'         | 'Range'       | 'Orelse'
-    | 'As'          | 'Typeof'      | 'Sizeof';
+    | 'Unset'           | 'Primary'     | 'Postfix'     | 'Prefix'
+    | 'Binary'          | 'Cond'        | 'If'          | 'Match'
+    | 'Catch'           | 'Try'         | 'Range'       | 'Orelse'
+    | 'As'              | 'Typeof'      | 'Sizeof';
 
     export type ExprTypes =
-    | PrimaryNode   | PostfixNode   | PrefixNode    | BinaryNode
-    | CondNode      | IfNode        | SwitchNode    | CatchNode
-    | TryNode       | RangeNode     | OrelseNode    | AsNode
-    | TypeofNode    | SizeofNode;
+    | PrimaryNode       | PostfixNode   | PrefixNode    | BinaryNode
+    | ConditionalNode   | IfNode        | MatchNode     | CatchNode
+    | TryNode           | RangeNode     | OrelseNode    | AsNode
+    | TypeofNode        | SizeofNode;
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -92,28 +92,28 @@
 
         // ┌──────────────────────────────── HELP ──────────────────────────────┐
 
-            getPrimary()        : PrimaryNode   | undefined     { return this.is('Primary')     ? this.data as PrimaryNode      : undefined; }
-            getPostfix()        : PostfixNode   | undefined     { return this.is('Postfix')     ? this.data as PostfixNode      : undefined; }
-            getPrefix()         : PrefixNode    | undefined     { return this.is('Prefix')      ? this.data as PrefixNode       : undefined; }
-            getBinary()         : BinaryNode    | undefined     { return this.is('Binary')      ? this.data as BinaryNode       : undefined; }
-            getConditional()    : CondNode      | undefined     { return this.is('Cond')        ? this.data as CondNode         : undefined; }
-            getIf()             : IfNode        | undefined     { return this.is('If')          ? this.data as IfNode           : undefined; }
-            getSwitch()         : SwitchNode    | undefined     { return this.is('Switch')      ? this.data as SwitchNode       : undefined; }
-            getCatch()          : CatchNode     | undefined     { return this.is('Catch')       ? this.data as CatchNode        : undefined; }
-            getTry()            : TryNode       | undefined     { return this.is('Try')         ? this.data as TryNode          : undefined; }
-            getRange()          : RangeNode     | undefined     { return this.is('Range')       ? this.data as RangeNode        : undefined; }
-            getOrelse()         : OrelseNode    | undefined     { return this.is('Orelse')      ? this.data as OrelseNode       : undefined; }
-            getAs()             : AsNode        | undefined     { return this.is('As')          ? this.data as AsNode           : undefined; }
+            getPrimary()        : PrimaryNode       | undefined     { return this.is('Primary')     ? this.data as PrimaryNode      : undefined; }
+            getPostfix()        : PostfixNode       | undefined     { return this.is('Postfix')     ? this.data as PostfixNode      : undefined; }
+            getPrefix()         : PrefixNode        | undefined     { return this.is('Prefix')      ? this.data as PrefixNode       : undefined; }
+            getBinary()         : BinaryNode        | undefined     { return this.is('Binary')      ? this.data as BinaryNode       : undefined; }
+            getConditional()    : ConditionalNode   | undefined     { return this.is('Cond')        ? this.data as ConditionalNode  : undefined; }
+            getIf()             : IfNode            | undefined     { return this.is('If')          ? this.data as IfNode           : undefined; }
+            getMatch()          : MatchNode         | undefined     { return this.is('Match')       ? this.data as MatchNode        : undefined; }
+            getCatch()          : CatchNode         | undefined     { return this.is('Catch')       ? this.data as CatchNode        : undefined; }
+            getTry()            : TryNode           | undefined     { return this.is('Try')         ? this.data as TryNode          : undefined; }
+            getRange()          : RangeNode         | undefined     { return this.is('Range')       ? this.data as RangeNode        : undefined; }
+            getOrelse()         : OrelseNode        | undefined     { return this.is('Orelse')      ? this.data as OrelseNode       : undefined; }
+            getAs()             : AsNode            | undefined     { return this.is('As')          ? this.data as AsNode           : undefined; }
 
-            getTypeof()         : TypeofNode    | undefined     { return this.is('Typeof')      ? this.data as TypeofNode      : undefined; }
-            getSizeof()         : SizeofNode    | undefined     { return this.is('Sizeof')      ? this.data as SizeofNode      : undefined; }
+            getTypeof()         : TypeofNode        | undefined     { return this.is('Typeof')      ? this.data as TypeofNode      : undefined; }
+            getSizeof()         : SizeofNode        | undefined     { return this.is('Sizeof')      ? this.data as SizeofNode      : undefined; }
 
-            getLiteral()        : LiteralNode   | undefined     { return this.is('Primary') && this.getPrimary()!.is('Literal') ? this.getPrimary()!.getLiteral() : undefined; }
-            getIdent()          : IdentNode     | undefined     { return this.is('Primary') && this.getPrimary()!.is('Ident')   ? this.getPrimary()!.getIdent()   : undefined; }
-            getParen()          : ParenNode     | undefined     { return this.is('Primary') && this.getPrimary()!.is('Paren')   ? this.getPrimary()!.getParen()   : undefined; }
-            getObject()         : ObjectNode    | undefined     { return this.is('Primary') && this.getPrimary()!.is('Object')  ? this.getPrimary()!.getObject()  : undefined; }
-            getTuple()          : ExprTupleNode | undefined     { return this.is('Primary') && this.getPrimary()!.is('Tuple')   ? this.getPrimary()!.getTuple()   : undefined; }
-            getType()           : TypeNode      | undefined     { return this.is('Primary') && this.getPrimary()!.is('Type')    ? this.getPrimary()!.getType()    : undefined; }
+            getLiteral()        : LiteralNode       | undefined     { return this.is('Primary') && this.getPrimary()!.is('Literal') ? this.getPrimary()!.getLiteral() : undefined; }
+            getIdent()          : IdentNode         | undefined     { return this.is('Primary') && this.getPrimary()!.is('Ident')   ? this.getPrimary()!.getIdent()   : undefined; }
+            getParen()          : ParenNode         | undefined     { return this.is('Primary') && this.getPrimary()!.is('Paren')   ? this.getPrimary()!.getParen()   : undefined; }
+            getObject()         : ObjectNode        | undefined     { return this.is('Primary') && this.getPrimary()!.is('Object')  ? this.getPrimary()!.getObject()  : undefined; }
+            getTuple()          : ExprTupleNode     | undefined     { return this.is('Primary') && this.getPrimary()!.is('Tuple')   ? this.getPrimary()!.getTuple()   : undefined; }
+            getType()           : TypeNode          | undefined     { return this.is('Primary') && this.getPrimary()!.is('Type')    ? this.getPrimary()!.getType()    : undefined; }
 
             is(kind: ExprKind)  { return this.kind === kind; }
             isOrEndWith(kind: ExprKind) : boolean { return (this.is(kind) || this.isParen() && this.getParen()!.source.isOrEndWith(kind)) || false; }
@@ -240,13 +240,13 @@
                     return new ExprNode('Binary', span, BinaryNode.create(span || DEF_SPAN, left, operator, right)); }
 
                 static asConditional(span: Span, condExpr: ExprNode, trueExpr: ExprNode, falseExpr: ExprNode) : ExprNode {
-                    return new ExprNode('Cond', span, CondNode.create(span || DEF_SPAN, condExpr, trueExpr, falseExpr)); }
+                    return new ExprNode('Cond', span, ConditionalNode.create(span || DEF_SPAN, condExpr, trueExpr, falseExpr)); }
 
                 static asIf(span: Span, condExpr: ExprNode, thenStmt: StmtNode, elseStmt: StmtNode | null) : ExprNode {
                     return new ExprNode('If', span, IfNode.create(span || DEF_SPAN, condExpr, thenStmt, elseStmt)); }
 
-                static asSwitch(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null) : ExprNode {
-                    return new ExprNode('Switch', span, SwitchNode.create(span || DEF_SPAN, condExpr, cases, defCase)); }
+                static asMatch(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null) : ExprNode {
+                    return new ExprNode('Match', span, MatchNode.create(span || DEF_SPAN, condExpr, cases, defCase)); }
 
                 static asCatch(span: Span, leftExpr: ExprNode, tag: ExprNode | null, rightStmt: StmtNode) : ExprNode {
                     return new ExprNode('Catch', span, CatchNode.create(span || DEF_SPAN, leftExpr, tag, rightStmt)); }
