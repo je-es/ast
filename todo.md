@@ -2,7 +2,9 @@
 
     ...
 
-    - add : `Unreachable` expression.
+    - add : `unreachable` expression.
+
+    - add : `noreturn` type.
 
 - ## Current
 

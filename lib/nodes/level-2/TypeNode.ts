@@ -24,7 +24,7 @@
     import { StructMemberNode }                         from '../level-5/ExprNodes/StructMemberNode';
     import { EnumVariantNode }                          from '../level-5/ExprNodes/EnumVariantNode';
     import { ErrsetTypeNode }                           from '../level-3/TypeNodes/ErrsetTypeNode';
-import { ParenTypeNode } from '../level-3/TypeNodes/ParenTypeNode';
+    import { ParenTypeNode }                            from '../level-3/TypeNodes/ParenTypeNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -99,6 +99,7 @@ import { ParenTypeNode } from '../level-3/TypeNodes/ParenTypeNode';
             isFloat()           { return this.isPrimitive() && this.getPrimitive()!.isFloat(); }
             isNumeric()         { return this.isPrimitive() && this.getPrimitive()!.isNumeric(); }
             isBool()            { return this.isPrimitive() && this.getPrimitive()!.isBool(); }
+            isNoreturn()        { return this.isPrimitive() && this.getPrimitive()!.isNoreturn(); }
             isIdent()           { return this.is('ident'); }
 
             isPointer()         { return this.kind === 'pointer'; }
@@ -190,6 +191,10 @@ import { ParenTypeNode } from '../level-3/TypeNodes/ParenTypeNode';
 
             static asComptimeFloat(span: Span | undefined, text: string): TypeNode {
                 return TypeNode.asPrimitive(span || DEF_SPAN, 'cflt', text, 64);
+            }
+
+            static asNoreturn(span?: Span): TypeNode {
+                return TypeNode.asPrimitive(span || DEF_SPAN, 'noreturn');
             }
 
             static asIdentifier(span: Span | undefined, name: string): TypeNode {

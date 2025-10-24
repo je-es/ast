@@ -1233,6 +1233,8 @@ var PrimitiveTypeNode = class _PrimitiveTypeNode extends Node {
         return "any";
       case "err":
         return "err";
+      case "noreturn":
+        return "noreturn";
     }
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -1281,6 +1283,9 @@ var PrimitiveTypeNode = class _PrimitiveTypeNode extends Node {
   }
   isErr() {
     return this.is("err");
+  }
+  isNoreturn() {
+    return this.is("noreturn");
   }
   static calcWidth(prefix, text) {
     if (!text.startsWith(prefix)) {
@@ -1333,6 +1338,9 @@ var PrimitiveTypeNode = class _PrimitiveTypeNode extends Node {
   }
   static asComptimeFloat(span, text) {
     return _PrimitiveTypeNode.create("cflt", span || DEF_SPAN, text, 64);
+  }
+  static asNoreturn(span) {
+    return _PrimitiveTypeNode.create("noreturn", span || DEF_SPAN);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -1771,6 +1779,9 @@ var TypeNode = class _TypeNode extends Node {
   isBool() {
     return this.isPrimitive() && this.getPrimitive().isBool();
   }
+  isNoreturn() {
+    return this.isPrimitive() && this.getPrimitive().isNoreturn();
+  }
   isIdent() {
     return this.is("ident");
   }
@@ -1902,6 +1913,9 @@ var TypeNode = class _TypeNode extends Node {
   static asComptimeFloat(span, text) {
     return _TypeNode.asPrimitive(span || DEF_SPAN, "cflt", text, 64);
   }
+  static asNoreturn(span) {
+    return _TypeNode.asPrimitive(span || DEF_SPAN, "noreturn");
+  }
   static asIdentifier(span, name) {
     return new _TypeNode(span || DEF_SPAN, "ident", IdentNode.create(span || DEF_SPAN, name));
   }
@@ -2031,6 +2045,9 @@ var PrimaryNode = class _PrimaryNode extends Node {
   }
   static asType(span, type) {
     return this.create("Type", span, type);
+  }
+  static asUnreachable(span) {
+    return this.create("Unreachable", span);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -2756,33 +2773,6 @@ var SizeofNode = class _SizeofNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
 };
 
-// lib/nodes/level-3/ExprNodes/UnreachableNode.ts
-var UnreachableNode = class _UnreachableNode extends Node {
-  constructor(span) {
-    super();
-    this.span = span;
-    // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.level = 3;
-    this.kind = "Unreachable";
-  }
-  // └────────────────────────────────────────────────────────────────────┘
-  // ┌──────────────────────────────── NODE ──────────────────────────────┐
-  getChildrenNodes() {
-    return [];
-  }
-  clone(newSpan) {
-    return new _UnreachableNode(
-      newSpan != null ? newSpan : this.span
-    );
-  }
-  // └────────────────────────────────────────────────────────────────────┘
-  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span) {
-    return new _UnreachableNode(span);
-  }
-  // └────────────────────────────────────────────────────────────────────┘
-};
-
 // lib/nodes/level-2/ExprNode.ts
 var ExprNode = class _ExprNode extends Node {
   constructor(kind, span, data) {
@@ -2846,9 +2836,6 @@ var ExprNode = class _ExprNode extends Node {
   getSizeof() {
     return this.is("Sizeof") ? this.data : void 0;
   }
-  getUnreachable() {
-    return this.is("Unreachable") ? this.data : void 0;
-  }
   getLiteral() {
     return this.is("Primary") && this.getPrimary().is("Literal") ? this.getPrimary().getLiteral() : void 0;
   }
@@ -2878,6 +2865,9 @@ var ExprNode = class _ExprNode extends Node {
   }
   isLiteral() {
     return this.is("Primary") && this.getPrimary().is("Literal");
+  }
+  isUnreachable() {
+    return this.is("Primary") && this.getPrimary().is("Unreachable");
   }
   isObject() {
     return this.is("Primary") && this.getPrimary().is("Object");
@@ -2912,9 +2902,6 @@ var ExprNode = class _ExprNode extends Node {
   isSizeof() {
     return this.is("Sizeof");
   }
-  isUnreachable() {
-    return this.is("Unreachable");
-  }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
   // ────────────────────────── Primary ──────────────────────────
@@ -2926,6 +2913,9 @@ var ExprNode = class _ExprNode extends Node {
   }
   static asIdent(span, name, builtin = false) {
     return _ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asIdent(span || DEF_SPAN, name, builtin));
+  }
+  static asUnreachable(span) {
+    return _ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asUnreachable(span || DEF_SPAN));
   }
   static asType(span, type) {
     return _ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asType(span || DEF_SPAN, type));
@@ -3043,9 +3033,6 @@ var ExprNode = class _ExprNode extends Node {
   }
   static asSizeof(span, type) {
     return new _ExprNode("Sizeof", span, SizeofNode.create(span || DEF_SPAN, type));
-  }
-  static asUnreachable(span) {
-    return new _ExprNode("Unreachable", span, UnreachableNode.create(span || DEF_SPAN));
   }
   // └────────────────────────────────────────────────────────────────────┘
 };

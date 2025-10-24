@@ -108,7 +108,7 @@ declare class ParenNode extends Node {
     static create(span: Span, source: ExprNode): ParenNode;
 }
 
-type PrimitiveKind = 'type' | 'void' | 'bool' | 'signed' | 'unsigned' | 'float' | 'und' | 'null' | 'cint' | 'cflt' | 'any' | 'err';
+type PrimitiveKind = 'type' | 'void' | 'bool' | 'signed' | 'unsigned' | 'float' | 'und' | 'null' | 'cint' | 'cflt' | 'any' | 'err' | 'noreturn';
 declare class PrimitiveTypeNode extends Node {
     kind: PrimitiveKind;
     span: Span;
@@ -134,6 +134,7 @@ declare class PrimitiveTypeNode extends Node {
     isNumeric(): boolean;
     isAny(): boolean;
     isErr(): boolean;
+    isNoreturn(): boolean;
     static calcWidth(prefix: string, text: string): number;
     static create(kind: PrimitiveKind, span: Span, text?: string, width?: number): PrimitiveTypeNode;
     static asVoid(span?: Span): PrimitiveTypeNode;
@@ -148,6 +149,7 @@ declare class PrimitiveTypeNode extends Node {
     static asFloat(span?: Span, text?: string, width?: number): PrimitiveTypeNode;
     static asComptimeInt(span?: Span, text?: string): PrimitiveTypeNode;
     static asComptimeFloat(span?: Span, text?: string): PrimitiveTypeNode;
+    static asNoreturn(span?: Span): PrimitiveTypeNode;
 }
 
 declare class OptionalTypeNode extends Node {
@@ -343,6 +345,7 @@ declare class TypeNode extends Node {
     isFloat(): boolean;
     isNumeric(): boolean;
     isBool(): boolean;
+    isNoreturn(): boolean;
     isIdent(): boolean;
     isPointer(): boolean;
     isOptional(): boolean;
@@ -386,6 +389,7 @@ declare class TypeNode extends Node {
     static asType(span?: Span): TypeNode;
     static asComptimeInt(span: Span | undefined, text: string): TypeNode;
     static asComptimeFloat(span: Span | undefined, text: string): TypeNode;
+    static asNoreturn(span?: Span): TypeNode;
     static asIdentifier(span: Span | undefined, name: string): TypeNode;
     static asPointer(span: Span | undefined, target: TypeNode, mutable?: boolean): TypeNode;
     static asOptional(span: Span | undefined, target: TypeNode): TypeNode;
@@ -402,7 +406,7 @@ declare class TypeNode extends Node {
     static asParen(span: Span | undefined, type: TypeNode): TypeNode;
 }
 
-type PrimaryKind = 'Literal' | 'Ident' | 'Paren' | 'Object' | 'Tuple' | 'Type';
+type PrimaryKind = 'Literal' | 'Ident' | 'Paren' | 'Object' | 'Tuple' | 'Type' | 'Unreachable';
 type PrimaryTypes = IdentNode | LiteralNode | ParenNode | ObjectNode | ExprTupleNode | TypeNode;
 declare class PrimaryNode extends Node {
     kind: PrimaryKind;
@@ -426,6 +430,7 @@ declare class PrimaryNode extends Node {
     static asObject(span: Span, props: PropNode[], ident: IdentNode | undefined): PrimaryNode;
     static asTuple(span: Span, exprs: ExprNode[]): PrimaryNode;
     static asType(span: Span, type: TypeNode): PrimaryNode;
+    static asUnreachable(span: Span): PrimaryNode;
 }
 
 declare class MemberAccessNode extends Node {
@@ -680,18 +685,8 @@ declare class SizeofNode extends Node {
     static create(span: Span, expr: ExprNode): SizeofNode;
 }
 
-declare class UnreachableNode extends Node {
-    span: Span;
-    level: number;
-    kind: string;
-    constructor(span: Span);
-    getChildrenNodes(): Node[];
-    clone(newSpan?: Span): UnreachableNode;
-    static create(span: Span): UnreachableNode;
-}
-
-type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Match' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof' | 'Unreachable';
-type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | MatchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode | UnreachableNode;
+type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Match' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof';
+type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | MatchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode;
 declare class ExprNode extends Node {
     kind: ExprKind;
     span: Span;
@@ -714,7 +709,6 @@ declare class ExprNode extends Node {
     getAs(): AsNode | undefined;
     getTypeof(): TypeofNode | undefined;
     getSizeof(): SizeofNode | undefined;
-    getUnreachable(): UnreachableNode | undefined;
     getLiteral(): LiteralNode | undefined;
     getIdent(): IdentNode | undefined;
     getParen(): ParenNode | undefined;
@@ -725,6 +719,7 @@ declare class ExprNode extends Node {
     isOrEndWith(kind: ExprKind): boolean;
     isIdent(): boolean;
     isLiteral(): boolean;
+    isUnreachable(): boolean;
     isObject(): boolean;
     isParen(): boolean;
     isTuple(): boolean;
@@ -736,10 +731,10 @@ declare class ExprNode extends Node {
     isAs(): boolean;
     isTypeof(): boolean;
     isSizeof(): boolean;
-    isUnreachable(): boolean;
     static asPrimary(span: Span, source: PrimaryNode): ExprNode;
     static asLiteral(span: Span, kind: LiteralNode["kind"], value: LiteralNode["value"]): ExprNode;
     static asIdent(span: Span, name: string, builtin?: boolean): ExprNode;
+    static asUnreachable(span: Span): ExprNode;
     static asType(span: Span, type: TypeNode): ExprNode;
     static asInteger(span: Span, value: number): ExprNode;
     static asFloat(span: Span, value: number): ExprNode;
@@ -778,7 +773,6 @@ declare class ExprNode extends Node {
     static asAs(span: Span, base: ExprNode, type: TypeNode): ExprNode;
     static asTypeof(span: Span, type: ExprNode): ExprNode;
     static asSizeof(span: Span, type: ExprNode): ExprNode;
-    static asUnreachable(span: Span): ExprNode;
 }
 
 declare class BlockStmtNode extends Node {

@@ -21,7 +21,8 @@
     export type PrimitiveKind =
         | 'type'        | 'void'            | 'bool'        | 'signed'
         | 'unsigned'    | 'float'           | 'und'         | 'null'
-        | 'cint'        | 'cflt'            | 'any'         | 'err';
+        | 'cint'        | 'cflt'            | 'any'         | 'err'
+        | 'noreturn';
 
     export type PrimitiveTypes = IdentNode | LiteralNode | ParenNode | ObjectNode;
 
@@ -74,6 +75,7 @@
                     case 'cflt':            return 'cflt';
                     case 'any':             return 'any';
                     case 'err':             return 'err';
+                    case 'noreturn':        return 'noreturn';
                 }
             }
 
@@ -100,6 +102,7 @@
             isNumeric()       { return this.is('signed') || this.is('unsigned') || this.is('float') || this.is('cint') || this.is('cflt'); }
             isAny()           { return this.is('any'); }
             isErr()           { return this.is('err'); }
+            isNoreturn()      { return this.is('noreturn'); }
 
             static calcWidth(prefix: string, text: string): number {
                 // Check if text starts with the prefix
@@ -172,6 +175,10 @@
 
             static asComptimeFloat(span?: Span, text?: string): PrimitiveTypeNode {
                 return PrimitiveTypeNode.create('cflt', span || DEF_SPAN, text, 64);
+            }
+
+            static asNoreturn(span?: Span): PrimitiveTypeNode {
+                return PrimitiveTypeNode.create('noreturn', span || DEF_SPAN);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

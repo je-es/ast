@@ -23,7 +23,7 @@
 
 // ╔════════════════════════════════════════ INIT ════════════════════════════════════════╗
 
-    export type PrimaryKind = 'Literal' | 'Ident' | 'Paren' | 'Object' | 'Tuple' | 'Type';
+    export type PrimaryKind = 'Literal' | 'Ident' | 'Paren' | 'Object' | 'Tuple' | 'Type' | 'Unreachable';
     export type PrimaryTypes = IdentNode | LiteralNode | ParenNode | ObjectNode | ExprTupleNode | TypeNode;
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
@@ -149,6 +149,10 @@
 
             static asType(span:Span, type: TypeNode) : PrimaryNode {
                 return this.create('Type', span, type);
+            }
+
+            static asUnreachable(span:Span) : PrimaryNode {
+                return this.create('Unreachable', span);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

@@ -34,7 +34,6 @@
     import { DefaultNode }                                  from '../level-5/ExprNodes/DefaultNode';
     import { TypeofNode }                                   from '../level-3/ExprNodes/TypeofNode';
     import { SizeofNode }                                   from '../level-3/ExprNodes/SizeofNode';
-    import { UnreachableNode }                              from '../level-3/ExprNodes/UnreachableNode';
 
     export { PropNode, CaseNode, DefaultNode };
 
@@ -48,13 +47,13 @@
     | 'Unset'           | 'Primary'     | 'Postfix'     | 'Prefix'
     | 'Binary'          | 'Cond'        | 'If'          | 'Match'
     | 'Catch'           | 'Try'         | 'Range'       | 'Orelse'
-    | 'As'              | 'Typeof'      | 'Sizeof'      | 'Unreachable';
+    | 'As'              | 'Typeof'      | 'Sizeof';
 
     export type ExprTypes =
     | PrimaryNode       | PostfixNode   | PrefixNode    | BinaryNode
     | ConditionalNode   | IfNode        | MatchNode     | CatchNode
     | TryNode           | RangeNode     | OrelseNode    | AsNode
-    | TypeofNode        | SizeofNode    | UnreachableNode;
+    | TypeofNode        | SizeofNode;
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -108,7 +107,6 @@
 
             getTypeof()         : TypeofNode        | undefined     { return this.is('Typeof')      ? this.data as TypeofNode      : undefined; }
             getSizeof()         : SizeofNode        | undefined     { return this.is('Sizeof')      ? this.data as SizeofNode      : undefined; }
-            getUnreachable()    : UnreachableNode   | undefined     { return this.is('Unreachable') ? this.data as UnreachableNode : undefined; }
 
             getLiteral()        : LiteralNode       | undefined     { return this.is('Primary') && this.getPrimary()!.is('Literal') ? this.getPrimary()!.getLiteral() : undefined; }
             getIdent()          : IdentNode         | undefined     { return this.is('Primary') && this.getPrimary()!.is('Ident')   ? this.getPrimary()!.getIdent()   : undefined; }
@@ -122,6 +120,7 @@
 
             isIdent()           { return this.is('Primary') && this.getPrimary()!.is('Ident'); }
             isLiteral()         { return this.is('Primary') && this.getPrimary()!.is('Literal'); }
+            isUnreachable()     { return this.is('Primary') && this.getPrimary()!.is('Unreachable'); }
             isObject()          { return this.is('Primary') && this.getPrimary()!.is('Object'); }
             isParen()           { return this.is('Primary') && this.getPrimary()!.is('Paren'); }
             isTuple()           { return this.is('Primary') && this.getPrimary()!.is('Tuple'); }
@@ -135,7 +134,6 @@
 
             isTypeof()          { return this.is('Typeof'); }
             isSizeof()          { return this.is('Sizeof'); }
-            isUnreachable()     { return this.is('Unreachable'); }
 
         // └────────────────────────────────────────────────────────────────────┘
 
@@ -152,6 +150,9 @@
 
                 static asIdent(span: Span, name: string, builtin = false) : ExprNode {
                     return ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asIdent(span || DEF_SPAN, name, builtin)); }
+
+                static asUnreachable(span: Span) : ExprNode {
+                    return ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asUnreachable(span || DEF_SPAN)); }
 
                 static asType(span: Span, type: TypeNode) : ExprNode {
                     return ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asType(span || DEF_SPAN, type)); }
@@ -271,10 +272,6 @@
 
                 static asSizeof(span: Span, type: ExprNode) : ExprNode {
                     return new ExprNode('Sizeof', span, SizeofNode.create(span || DEF_SPAN, type)); }
-
-                static asUnreachable(span: Span) : ExprNode {
-                    return new ExprNode('Unreachable', span, UnreachableNode.create(span || DEF_SPAN)); }
-
 
         // └────────────────────────────────────────────────────────────────────┘
 
