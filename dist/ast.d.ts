@@ -680,8 +680,18 @@ declare class SizeofNode extends Node {
     static create(span: Span, expr: ExprNode): SizeofNode;
 }
 
-type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Match' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof';
-type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | MatchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode;
+declare class UnreachableNode extends Node {
+    span: Span;
+    level: number;
+    kind: string;
+    constructor(span: Span);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): UnreachableNode;
+    static create(span: Span): UnreachableNode;
+}
+
+type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Match' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof' | 'Unreachable';
+type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | MatchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode | UnreachableNode;
 declare class ExprNode extends Node {
     kind: ExprKind;
     span: Span;
@@ -704,6 +714,7 @@ declare class ExprNode extends Node {
     getAs(): AsNode | undefined;
     getTypeof(): TypeofNode | undefined;
     getSizeof(): SizeofNode | undefined;
+    getUnreachable(): UnreachableNode | undefined;
     getLiteral(): LiteralNode | undefined;
     getIdent(): IdentNode | undefined;
     getParen(): ParenNode | undefined;
@@ -725,6 +736,7 @@ declare class ExprNode extends Node {
     isAs(): boolean;
     isTypeof(): boolean;
     isSizeof(): boolean;
+    isUnreachable(): boolean;
     static asPrimary(span: Span, source: PrimaryNode): ExprNode;
     static asLiteral(span: Span, kind: LiteralNode["kind"], value: LiteralNode["value"]): ExprNode;
     static asIdent(span: Span, name: string, builtin?: boolean): ExprNode;
@@ -766,6 +778,7 @@ declare class ExprNode extends Node {
     static asAs(span: Span, base: ExprNode, type: TypeNode): ExprNode;
     static asTypeof(span: Span, type: ExprNode): ExprNode;
     static asSizeof(span: Span, type: ExprNode): ExprNode;
+    static asUnreachable(span: Span): ExprNode;
 }
 
 declare class BlockStmtNode extends Node {

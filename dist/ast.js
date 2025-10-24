@@ -2756,6 +2756,33 @@ var SizeofNode = class _SizeofNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
 };
 
+// lib/nodes/level-3/ExprNodes/UnreachableNode.ts
+var UnreachableNode = class _UnreachableNode extends Node {
+  constructor(span) {
+    super();
+    this.span = span;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "Unreachable";
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return [];
+  }
+  clone(newSpan) {
+    return new _UnreachableNode(
+      newSpan != null ? newSpan : this.span
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span) {
+    return new _UnreachableNode(span);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
 // lib/nodes/level-2/ExprNode.ts
 var ExprNode = class _ExprNode extends Node {
   constructor(kind, span, data) {
@@ -2819,6 +2846,9 @@ var ExprNode = class _ExprNode extends Node {
   getSizeof() {
     return this.is("Sizeof") ? this.data : void 0;
   }
+  getUnreachable() {
+    return this.is("Unreachable") ? this.data : void 0;
+  }
   getLiteral() {
     return this.is("Primary") && this.getPrimary().is("Literal") ? this.getPrimary().getLiteral() : void 0;
   }
@@ -2881,6 +2911,9 @@ var ExprNode = class _ExprNode extends Node {
   }
   isSizeof() {
     return this.is("Sizeof");
+  }
+  isUnreachable() {
+    return this.is("Unreachable");
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
@@ -3010,6 +3043,9 @@ var ExprNode = class _ExprNode extends Node {
   }
   static asSizeof(span, type) {
     return new _ExprNode("Sizeof", span, SizeofNode.create(span || DEF_SPAN, type));
+  }
+  static asUnreachable(span) {
+    return new _ExprNode("Unreachable", span, UnreachableNode.create(span || DEF_SPAN));
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
