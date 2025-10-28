@@ -244,20 +244,20 @@
                 return StmtNode.create('Block', span, BlockStmtNode.create(span, stmts));
             }
 
-            static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span): StmtNode {
-                return StmtNode.create('Use', span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan));
+            static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): StmtNode {
+                return StmtNode.create('Use', span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
             }
 
-            static asDefine(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode): StmtNode {
-                return StmtNode.create('Def', span, DefStmtNode.create(span, visibility, ident, type));
+            static asDefine(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): StmtNode {
+                return StmtNode.create('Def', span, DefStmtNode.create(span, visibility, ident, type, documents));
             }
 
-            static asLet(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode): StmtNode {
-                return StmtNode.create('Let', span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer));
+            static asLet(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): StmtNode {
+                return StmtNode.create('Let', span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents));
             }
 
-            static asFunc(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], errorType: TypeNode | undefined, returnType: TypeNode | undefined, body: StmtNode): StmtNode {
-                return StmtNode.create('Func', span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType));
+            static asFunc(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], errorType: TypeNode | undefined, returnType: TypeNode | undefined, body: StmtNode, documents?: string[]): StmtNode {
+                return StmtNode.create('Func', span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents));
             }
 
             static asFor(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode {
@@ -292,8 +292,8 @@
                 return StmtNode.create('Continue', span, ControlFlowStmtNode.asContinue(span));
             }
 
-            static asTest(span: Span, nameInfo: NameInfo | undefined, block: BlockStmtNode): StmtNode {
-                return StmtNode.create('Test', span, TestStmtNode.create(span, nameInfo, block));
+            static asTest(span: Span, nameInfo: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): StmtNode {
+                return StmtNode.create('Test', span, TestStmtNode.create(span, nameInfo, block, documents));
             }
 
         // └────────────────────────────────────────────────────────────────────┘

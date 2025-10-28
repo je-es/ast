@@ -789,13 +789,14 @@ declare class BlockStmtNode extends Node {
 declare class LetStmtNode extends Node {
     span: Span;
     field: FieldNode;
+    documents: string[];
     kind: "Let";
     level: number;
-    constructor(span: Span, field: FieldNode);
+    constructor(span: Span, field: FieldNode, documents?: string[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): LetStmtNode;
     getField(): FieldNode;
-    static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode): LetStmtNode;
+    static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): LetStmtNode;
 }
 
 declare class FieldNode extends Node {
@@ -806,13 +807,14 @@ declare class FieldNode extends Node {
     ident: IdentNode;
     type?: TypeNode | undefined;
     initializer?: ExprNode | undefined;
+    documents: string[];
     level: number;
     kind: "Field";
-    constructor(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode | undefined, initializer?: ExprNode | undefined);
+    constructor(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode | undefined, initializer?: ExprNode | undefined, documents?: string[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): FieldNode;
     getField(): FieldNode;
-    static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode): FieldNode;
+    static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): FieldNode;
 }
 
 declare class FuncStmtNode extends Node {
@@ -825,12 +827,13 @@ declare class FuncStmtNode extends Node {
     body: StmtNode;
     errorType?: TypeNode | undefined;
     returnType?: TypeNode | undefined;
+    documents: string[];
     kind: "Function";
     level: number;
-    constructor(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], body: StmtNode, errorType?: TypeNode | undefined, returnType?: TypeNode | undefined);
+    constructor(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], body: StmtNode, errorType?: TypeNode | undefined, returnType?: TypeNode | undefined, documents?: string[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): FuncStmtNode;
-    static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], body: StmtNode, errorType?: TypeNode, returnType?: TypeNode): FuncStmtNode;
+    static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], body: StmtNode, errorType?: TypeNode, returnType?: TypeNode, documents?: string[]): FuncStmtNode;
 }
 
 declare class UseStmtNode extends Node {
@@ -840,12 +843,13 @@ declare class UseStmtNode extends Node {
     alias?: IdentNode | undefined;
     path?: string | undefined;
     pathSpan?: Span | undefined;
+    documents: string[];
     kind: "Use";
     level: number;
-    constructor(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode | undefined, path?: string | undefined, pathSpan?: Span | undefined);
+    constructor(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode | undefined, path?: string | undefined, pathSpan?: Span | undefined, documents?: string[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): UseStmtNode;
-    static create(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span): UseStmtNode;
+    static create(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): UseStmtNode;
     isAllModule(): boolean;
 }
 
@@ -854,12 +858,13 @@ declare class DefStmtNode extends Node {
     visibility: VisibilityInfo;
     ident: IdentNode;
     type: TypeNode;
+    documents: string[];
     kind: "Def";
     level: number;
-    constructor(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode);
+    constructor(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): DefStmtNode;
-    static create(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode): DefStmtNode;
+    static create(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): DefStmtNode;
 }
 
 type LoopKind = 'For' | 'While' | 'Do';
@@ -905,12 +910,13 @@ declare class TestStmtNode extends Node {
     span: Span;
     name: NameInfo | undefined;
     block: BlockStmtNode;
+    documents: string[];
     kind: "Test";
     level: number;
-    constructor(span: Span, name: NameInfo | undefined, block: BlockStmtNode);
+    constructor(span: Span, name: NameInfo | undefined, block: BlockStmtNode, documents?: string[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): TestStmtNode;
-    static create(span: Span, name: NameInfo | undefined, block: BlockStmtNode): TestStmtNode;
+    static create(span: Span, name: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): TestStmtNode;
 }
 
 type StmtKind = 'Unset' | 'Expression' | 'Block' | 'Use' | 'Def' | 'Let' | 'Func' | 'For' | 'While' | 'Return' | 'Break' | 'Continue' | 'Defer' | 'Throw' | 'Do' | 'Test';
@@ -945,10 +951,10 @@ declare class StmtNode extends Node {
     static create(kind: StmtKind, span: Span, data: StmtTypes): StmtNode;
     static asExpr(span: Span, expr: ExprNode): StmtNode;
     static asBlock(span: Span, stmts: StmtNode[]): StmtNode;
-    static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span): StmtNode;
-    static asDefine(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode): StmtNode;
-    static asLet(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode): StmtNode;
-    static asFunc(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], errorType: TypeNode | undefined, returnType: TypeNode | undefined, body: StmtNode): StmtNode;
+    static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): StmtNode;
+    static asDefine(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): StmtNode;
+    static asLet(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): StmtNode;
+    static asFunc(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], errorType: TypeNode | undefined, returnType: TypeNode | undefined, body: StmtNode, documents?: string[]): StmtNode;
     static asFor(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode;
     static asWhile(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode;
     static asDo(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode;
@@ -957,7 +963,7 @@ declare class StmtNode extends Node {
     static asThrow(span: Span, value?: ExprNode): StmtNode;
     static asBreak(span: Span): StmtNode;
     static asContinue(span: Span): StmtNode;
-    static asTest(span: Span, nameInfo: NameInfo | undefined, block: BlockStmtNode): StmtNode;
+    static asTest(span: Span, nameInfo: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): StmtNode;
     is(kind: StmtKind): boolean;
 }
 

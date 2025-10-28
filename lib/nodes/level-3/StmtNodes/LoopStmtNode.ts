@@ -31,10 +31,10 @@
             public level = 3;
 
             constructor(
-                public span : Span,
-                public kind : LoopKind,
-                public expr : ExprNode,
-                public stmt : StmtNode,
+                public span         : Span,
+                public kind         : LoopKind,
+                public expr         : ExprNode,
+                public stmt         : StmtNode,
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘

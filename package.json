@@ -1,6 +1,6 @@
 {
 	"name": "@je-es/ast",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "A library for building and managing Abstract Syntax Trees.",
 	"keywords": [ "je-es", "ast", "program", "module", "statements", "exressions", "types" ],
 	"license": "MIT",

@@ -23,9 +23,10 @@
             public level = 3;
 
             constructor(
-                public span             : Span,
-                public name             : NameInfo | undefined,
-                public block            : BlockStmtNode,
+                public span         : Span,
+                public name         : NameInfo | undefined,
+                public block        : BlockStmtNode,
+                public documents    : string[] = [],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -50,8 +51,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, name: NameInfo | undefined, block: BlockStmtNode): TestStmtNode {
-                return new TestStmtNode(span, name, block);
+            static create(span: Span, name: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): TestStmtNode {
+                return new TestStmtNode(span, name, block, documents);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

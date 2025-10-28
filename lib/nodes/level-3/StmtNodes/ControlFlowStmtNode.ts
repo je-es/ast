@@ -32,7 +32,7 @@
             constructor(
                 public span         : Span,
                 public kind         : ControlFlowKind,
-                public value?       : ExprNode, // Only for Return
+                public value?       : ExprNode,
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘

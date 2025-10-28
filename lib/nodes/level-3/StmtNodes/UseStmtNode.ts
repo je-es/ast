@@ -23,12 +23,13 @@
             public level = 3;
 
             constructor(
-                public span             : Span,
-                public visibility       : VisibilityInfo,
-                public targetArr        : IdentNode[] | undefined,
-                public alias?           : IdentNode,
-                public path?            : string,
-                public pathSpan?        : Span,
+                public span         : Span,
+                public visibility   : VisibilityInfo,
+                public targetArr    : IdentNode[] | undefined,
+                public alias?       : IdentNode,
+                public path?        : string,
+                public pathSpan?    : Span,
+                public documents    : string[] = [],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -56,8 +57,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span): UseStmtNode {
-                return new UseStmtNode(span, visibility, targetArr, alias, path, pathSpan);
+            static create(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): UseStmtNode {
+                return new UseStmtNode(span, visibility, targetArr, alias, path, pathSpan, documents);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

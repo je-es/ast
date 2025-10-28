@@ -35,6 +35,7 @@
                 public body             : StmtNode,
                 public errorType?       : TypeNode,
                 public returnType?      : TypeNode,
+                public documents        : string[] = [],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -76,8 +77,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], body: StmtNode, errorType?: TypeNode, returnType?: TypeNode): FuncStmtNode {
-                return new FuncStmtNode(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType);
+            static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], body: StmtNode, errorType?: TypeNode, returnType?: TypeNode, documents?: string[]): FuncStmtNode {
+                return new FuncStmtNode(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

@@ -504,10 +504,11 @@ var BlockStmtNode = class _BlockStmtNode extends Node {
 
 // lib/nodes/level-3/StmtNodes/LetStmtNode.ts
 var LetStmtNode = class _LetStmtNode extends Node {
-  constructor(span, field) {
+  constructor(span, field, documents = []) {
     super();
     this.span = span;
     this.field = field;
+    this.documents = documents;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.kind = "Let";
     this.level = 3;
@@ -529,8 +530,8 @@ var LetStmtNode = class _LetStmtNode extends Node {
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span, visibility, comptime, mutability, ident, type, initializer) {
-    const field = FieldNode.create(span, visibility, comptime, mutability, ident, type, initializer);
+  static create(span, visibility, comptime, mutability, ident, type, initializer, documents) {
+    const field = FieldNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents);
     return new _LetStmtNode(span, field);
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -538,7 +539,7 @@ var LetStmtNode = class _LetStmtNode extends Node {
 
 // lib/nodes/level-3/StmtNodes/FuncStmtNode.ts
 var FuncStmtNode = class _FuncStmtNode extends Node {
-  constructor(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType) {
+  constructor(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents = []) {
     super();
     this.span = span;
     this.visibility = visibility;
@@ -549,6 +550,7 @@ var FuncStmtNode = class _FuncStmtNode extends Node {
     this.body = body;
     this.errorType = errorType;
     this.returnType = returnType;
+    this.documents = documents;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.kind = "Function";
     this.level = 3;
@@ -586,15 +588,15 @@ var FuncStmtNode = class _FuncStmtNode extends Node {
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType) {
-    return new _FuncStmtNode(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType);
+  static create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents) {
+    return new _FuncStmtNode(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
 
 // lib/nodes/level-3/StmtNodes/UseStmtNode.ts
 var UseStmtNode = class _UseStmtNode extends Node {
-  constructor(span, visibility, targetArr, alias, path, pathSpan) {
+  constructor(span, visibility, targetArr, alias, path, pathSpan, documents = []) {
     super();
     this.span = span;
     this.visibility = visibility;
@@ -602,6 +604,7 @@ var UseStmtNode = class _UseStmtNode extends Node {
     this.alias = alias;
     this.path = path;
     this.pathSpan = pathSpan;
+    this.documents = documents;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.kind = "Use";
     this.level = 3;
@@ -623,8 +626,8 @@ var UseStmtNode = class _UseStmtNode extends Node {
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span, visibility, targetArr, alias, path, pathSpan) {
-    return new _UseStmtNode(span, visibility, targetArr, alias, path, pathSpan);
+  static create(span, visibility, targetArr, alias, path, pathSpan, documents) {
+    return new _UseStmtNode(span, visibility, targetArr, alias, path, pathSpan, documents);
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── HELP ──────────────────────────────┐
@@ -636,12 +639,13 @@ var UseStmtNode = class _UseStmtNode extends Node {
 
 // lib/nodes/level-3/StmtNodes/DefStmtNode.ts
 var DefStmtNode = class _DefStmtNode extends Node {
-  constructor(span, visibility, ident, type) {
+  constructor(span, visibility, ident, type, documents = []) {
     super();
     this.span = span;
     this.visibility = visibility;
     this.ident = ident;
     this.type = type;
+    this.documents = documents;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.kind = "Def";
     this.level = 3;
@@ -661,8 +665,8 @@ var DefStmtNode = class _DefStmtNode extends Node {
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span, visibility, ident, type) {
-    return new _DefStmtNode(span, visibility, ident, type);
+  static create(span, visibility, ident, type, documents) {
+    return new _DefStmtNode(span, visibility, ident, type, documents);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -777,11 +781,12 @@ var ControlFlowStmtNode = class _ControlFlowStmtNode extends Node {
 
 // lib/nodes/level-3/StmtNodes/TestStmtNode.ts
 var TestStmtNode = class _TestStmtNode extends Node {
-  constructor(span, name, block) {
+  constructor(span, name, block, documents = []) {
     super();
     this.span = span;
     this.name = name;
     this.block = block;
+    this.documents = documents;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.kind = "Test";
     this.level = 3;
@@ -800,8 +805,8 @@ var TestStmtNode = class _TestStmtNode extends Node {
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span, name, block) {
-    return new _TestStmtNode(span, name, block);
+  static create(span, name, block, documents) {
+    return new _TestStmtNode(span, name, block, documents);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -970,17 +975,17 @@ var StmtNode = class _StmtNode extends Node {
   static asBlock(span, stmts) {
     return _StmtNode.create("Block", span, BlockStmtNode.create(span, stmts));
   }
-  static asUse(span, visibility, targetArr, alias, path, pathSpan) {
-    return _StmtNode.create("Use", span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan));
+  static asUse(span, visibility, targetArr, alias, path, pathSpan, documents) {
+    return _StmtNode.create("Use", span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
   }
-  static asDefine(span, visibility, ident, type) {
-    return _StmtNode.create("Def", span, DefStmtNode.create(span, visibility, ident, type));
+  static asDefine(span, visibility, ident, type, documents) {
+    return _StmtNode.create("Def", span, DefStmtNode.create(span, visibility, ident, type, documents));
   }
-  static asLet(span, visibility, comptime, mutability, ident, type, initializer) {
-    return _StmtNode.create("Let", span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer));
+  static asLet(span, visibility, comptime, mutability, ident, type, initializer, documents) {
+    return _StmtNode.create("Let", span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents));
   }
-  static asFunc(span, visibility, comptime, isInline, ident, parameters, errorType, returnType, body) {
-    return _StmtNode.create("Func", span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType));
+  static asFunc(span, visibility, comptime, isInline, ident, parameters, errorType, returnType, body, documents) {
+    return _StmtNode.create("Func", span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents));
   }
   static asFor(span, expr, stmt) {
     return _StmtNode.create("For", span, LoopStmtNode.createFor(span, expr, stmt));
@@ -1006,8 +1011,8 @@ var StmtNode = class _StmtNode extends Node {
   static asContinue(span) {
     return _StmtNode.create("Continue", span, ControlFlowStmtNode.asContinue(span));
   }
-  static asTest(span, nameInfo, block) {
-    return _StmtNode.create("Test", span, TestStmtNode.create(span, nameInfo, block));
+  static asTest(span, nameInfo, block, documents) {
+    return _StmtNode.create("Test", span, TestStmtNode.create(span, nameInfo, block, documents));
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── IS_X ──────────────────────────────┐
@@ -3035,7 +3040,7 @@ var EnumVariantNode = class _EnumVariantNode extends Node {
 
 // lib/nodes/level-5/common/FieldNode.ts
 var FieldNode = class _FieldNode extends Node {
-  constructor(span, visibility, comptime, mutability, ident, type, initializer) {
+  constructor(span, visibility, comptime, mutability, ident, type, initializer, documents = []) {
     super();
     this.span = span;
     this.visibility = visibility;
@@ -3044,6 +3049,7 @@ var FieldNode = class _FieldNode extends Node {
     this.ident = ident;
     this.type = type;
     this.initializer = initializer;
+    this.documents = documents;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 5;
     this.kind = "Field";
@@ -3077,8 +3083,8 @@ var FieldNode = class _FieldNode extends Node {
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(span, visibility, comptime, mutability, ident, type, initializer) {
-    return new _FieldNode(span, visibility, comptime, mutability, ident, type, initializer);
+  static create(span, visibility, comptime, mutability, ident, type, initializer, documents) {
+    return new _FieldNode(span, visibility, comptime, mutability, ident, type, initializer, documents);
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── HELP ──────────────────────────────┐

@@ -33,6 +33,7 @@
                 public ident            : IdentNode,
                 public type?            : TypeNode,
                 public initializer      ?: ExprNode,
+                public documents        : string[] = [],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -71,8 +72,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode): FieldNode {
-                return new FieldNode(span, visibility, comptime, mutability, ident, type, initializer);
+            static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): FieldNode {
+                return new FieldNode(span, visibility, comptime, mutability, ident, type, initializer, documents);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

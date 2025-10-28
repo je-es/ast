@@ -28,6 +28,7 @@
                 public visibility       : VisibilityInfo,
                 public ident            : IdentNode,
                 public type             : TypeNode,
+                public documents        : string[] = [],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -53,8 +54,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode): DefStmtNode {
-                return new DefStmtNode(span, visibility, ident, type);
+            static create(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): DefStmtNode {
+                return new DefStmtNode(span, visibility, ident, type, documents);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

@@ -28,6 +28,7 @@
             constructor(
                 public span             : Span,
                 public field            : FieldNode,
+                public documents        : string[] = [],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -56,8 +57,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode): LetStmtNode {
-                const field = FieldNode.create(span, visibility, comptime, mutability, ident, type, initializer);
+            static create(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): LetStmtNode {
+                const field = FieldNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents);
                 return new LetStmtNode(span, field);
             }
 
