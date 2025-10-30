@@ -2,24 +2,26 @@
 <br>
 <div align="center">
     <p>
-        <img src="./assets/img/logo.png" alt="lsp" height="50" />
+        <img src="./assets/img/logo.png" alt="ast-Logo" style="" height="50" />
     </p>
 </div>
 
-<div align="center">
-    <img src="./assets/img/line.png" alt="line" style="display: block; margin-top:20px;margin-bottom:20px;width:500px;"/>
-</div>
-
-<p align="center" style="font-style:italic; color:gray;">
-    <br>
-    A library for building and managing Abstract Syntax Trees..!
-    <br>
-</p>
 
 <div align="center">
-    <img src="./assets/img/line.png" alt="line" style="display: block; margin-top:20px;margin-bottom:20px;width:500px;"/>
+    <p align="center" style="font-style:italic; color:gray;">
+        A library for building and managing AST.
+        <br>
+    </p>
+    <img src="https://img.shields.io/badge/Version-0.0.8-black"/>
+    <a href="https://github.com/je-es"><img src="https://img.shields.io/badge/Part_of-@je--es-black"/></a>
+    <a href="https://github.com/kemet-lang"><img src="https://img.shields.io/badge/Built_for-@kemet--lang-black"/></a>
 </div>
-<br>
+
+
+<div align="center">
+    <img src="./assets/img/line.png" alt="line" style="display: block; margin-top:20px;margin-bottom:20px;width:500px;"/>
+    <br>
+</div>
 
 <!--------------------------------------------------------------------------->
 
@@ -93,15 +95,15 @@ const my_let_stmt = AST.StmtNode.asLet(
 
 > #### 4. [`@je-es/ast`](https://github.com/je-es/ast)
 
-> #### 5. [@kemet-lang/rules](https://github.com/kemet-lang/rules)
+> #### 5. [@je-es/ast-analyzer](https://github.com/je-es/ast-analyzer)
 
-> #### 6. [@je-es/ast-analyzer](https://github.com/je-es/ast-analyzer)
+> #### 6. [@je-es/project](https://github.com/je-es/project)
 
-> #### 7. [@je-es/project](https://github.com/je-es/project)
+> #### 7. [@je-es/lsp](https://github.com/je-es/lsp)
 
-> #### 8. [@je-es/lsp](https://github.com/je-es/lsp)
+> #### 8. [@je-es/codegen](https://github.com/je-es/codegen)
 
-> #### 9. [@je-es/codegen](https://github.com/je-es/codegen)
+> #### 9. [@je-es/compiler](https://github.com/je-es/compiler)
 
 <div align="center">
     <img src="./assets/img/line.png" alt="line" style="display: block; margin-top:20px;margin-bottom:20px;width:500px;"/>

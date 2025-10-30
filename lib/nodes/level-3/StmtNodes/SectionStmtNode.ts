@@ -1,4 +1,4 @@
-// SizeofNode.ts
+// SectionStmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -6,8 +6,8 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { Span, Node }   from '../../node';
-    import { ExprNode }     from '../../level-2/ExprNode';
+    import { Span, Node, NameInfo }   from '../../node';
+    import { StmtNode }     from '../../level-1/StmtNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -15,16 +15,18 @@
 
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class SizeofNode extends Node {
+    export class SectionStmtNode extends Node {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
+            public kind = 'Section' as const;
             public level = 3;
-            public kind = 'Sizeof';
 
             constructor(
                 public span         : Span,
-                public expr         : ExprNode,
+                public name         : NameInfo,
+                public indent       : number,
+                public stmts        : StmtNode[],
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -33,13 +35,15 @@
         // ┌──────────────────────────────── NODE ──────────────────────────────┐
 
             public getChildrenNodes(): Node[] {
-                return [this.expr];
+                return this.stmts ? this.stmts : [];
             }
 
-            clone(newSpan?: Span): SizeofNode {
-                return new SizeofNode(
+            clone(newSpan?: Span): SectionStmtNode {
+                return new SectionStmtNode(
                     newSpan ?? this.span,
-                    this.expr
+                    this.name,
+                    this.indent,
+                    this.stmts
                 );
             }
 
@@ -48,8 +52,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, expr: ExprNode): SizeofNode {
-                return new SizeofNode(span, expr);
+            static create(span: Span, name: NameInfo, indent: number, stmts?: StmtNode[]): SectionStmtNode {
+                return new SectionStmtNode(span, name, indent, stmts ?? []);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

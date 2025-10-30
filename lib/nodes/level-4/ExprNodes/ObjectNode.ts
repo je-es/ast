@@ -6,9 +6,9 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { Span, Node } from '../../node';
-    import { PropNode } from '../../level-5/ExprNodes/PropNode';
-import { IdentNode } from '../CommonNodes/IdentNode';
+    import { Span, Node }   from '../../node';
+    import { PropNode }     from '../../level-5/ExprNodes/PropNode';
+    import { IdentNode }    from '../CommonNodes/IdentNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 

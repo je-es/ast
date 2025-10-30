@@ -1,4 +1,4 @@
-// ..?
+// StmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -10,6 +10,7 @@
                                         from '../node';
     import { ExprNode }                 from '../level-2/ExprNode';
     import { BlockStmtNode }            from '../level-3/StmtNodes/BlockStmtNode';
+    import { SectionStmtNode }          from '../level-3/StmtNodes/SectionStmtNode';
     import { LetStmtNode }              from '../level-3/StmtNodes/LetStmtNode';
     import { FuncStmtNode }             from '../level-3/StmtNodes/FuncStmtNode';
     import { UseStmtNode }              from '../level-3/StmtNodes/UseStmtNode';
@@ -31,11 +32,12 @@
     | 'Unset'       | 'Expression'  | 'Block'       | 'Use'         | 'Def'
     | 'Let'         | 'Func'        | 'For'         | 'While'       | 'Return'
     | 'Break'       | 'Continue'    | 'Defer'       | 'Throw'       | 'Do'
-    | 'Test';
+    | 'Test'        | 'Section';
 
     export type StmtTypes =
     | ExprNode      | BlockStmtNode | TestStmtNode  | LetStmtNode   | FuncStmtNode
-    | UseStmtNode   | DefStmtNode   | LoopStmtNode  | ControlFlowStmtNode;
+    | UseStmtNode   | DefStmtNode   | LoopStmtNode  | ControlFlowStmtNode
+    | SectionStmtNode;
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -65,6 +67,8 @@
 
                 if (this.is('Block')) {
                     children.push(...this.getBlock()!.getChildrenNodes());
+                } else if (this.is('Section')) {
+                    children.push(...this.getSection()!.getChildrenNodes());
                 } else if (this.source instanceof Node) {
                     children.push(this.source);
                 }
@@ -91,6 +95,13 @@
             getBlock(): BlockStmtNode | undefined {
                 if (this.is('Block')) {
                     return this.source as BlockStmtNode;
+                }
+                return undefined;
+            }
+
+            getSection(): SectionStmtNode | undefined {
+                if (this.is('Section')) {
+                    return this.source as SectionStmtNode;
                 }
                 return undefined;
             }
@@ -242,6 +253,10 @@
 
             static asBlock(span: Span, stmts: StmtNode[]): StmtNode {
                 return StmtNode.create('Block', span, BlockStmtNode.create(span, stmts));
+            }
+
+            static asSection(span: Span, nameInfo: NameInfo, indent: number, stmts: StmtNode[]): StmtNode {
+                return StmtNode.create('Section', span, SectionStmtNode.create(span, nameInfo, indent, stmts));
             }
 
             static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): StmtNode {

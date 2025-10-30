@@ -1,4 +1,4 @@
-// ..?
+// ErrsetTypeNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -6,8 +6,7 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { IdentNode }        from '../../../ast';
-    import { Span, Node }       from '../../node';
+    import { Span, Node, NameInfo } from '../../node';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -24,7 +23,7 @@
 
             constructor(
                 public span         : Span,
-                public members      : IdentNode[],
+                public members      : NameInfo[],
             ) {
                 super();
             }
@@ -36,9 +35,6 @@
 
             public getChildrenNodes(): Node[] {
                 const children: Node[] = [];
-
-                children.push(...this.members);
-
                 return children;
             }
 
@@ -56,7 +52,7 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, members: IdentNode[]): ErrsetTypeNode {
+            static create(span: Span, members: NameInfo[]): ErrsetTypeNode {
                 return new ErrsetTypeNode(span, members);
             }
 

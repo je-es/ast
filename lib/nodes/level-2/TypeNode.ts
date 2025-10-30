@@ -1,4 +1,4 @@
-// ..?
+// TypeNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -6,7 +6,7 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { DEF_SPAN, Node, Span }                     from '../node';
+    import { DEF_SPAN, NameInfo, Node, Span }                     from '../node';
     import { ExprNode }                                 from './ExprNode';
 
     import { PrimitiveKind, PrimitiveTypeNode }         from '../level-3/TypeNodes/PrimitiveTypeNode';
@@ -233,7 +233,7 @@
                 return new TypeNode(span || DEF_SPAN, 'function', FunctionTypeNode.create(span || DEF_SPAN, params, returnType, errorType));
             }
 
-            static asErrset(span: Span | undefined, members: IdentNode[]): TypeNode {
+            static asErrset(span: Span | undefined, members: NameInfo[]): TypeNode {
                 return new TypeNode(span || DEF_SPAN, 'errset', ErrsetTypeNode.create(span || DEF_SPAN, members));
             }
 

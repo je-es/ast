@@ -577,6 +577,39 @@ var BlockStmtNode = class _BlockStmtNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
 };
 
+// lib/nodes/level-3/StmtNodes/SectionStmtNode.ts
+var SectionStmtNode = class _SectionStmtNode extends Node {
+  constructor(span, name, indent, stmts) {
+    super();
+    this.span = span;
+    this.name = name;
+    this.indent = indent;
+    this.stmts = stmts;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.kind = "Section";
+    this.level = 3;
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return this.stmts ? this.stmts : [];
+  }
+  clone(newSpan) {
+    return new _SectionStmtNode(
+      newSpan != null ? newSpan : this.span,
+      this.name,
+      this.indent,
+      this.stmts
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span, name, indent, stmts) {
+    return new _SectionStmtNode(span, name, indent, stmts != null ? stmts : []);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
 // lib/nodes/level-3/StmtNodes/LetStmtNode.ts
 var LetStmtNode = class _LetStmtNode extends Node {
   constructor(span, field, documents = []) {
@@ -902,6 +935,8 @@ var StmtNode = class _StmtNode extends Node {
     const children = [];
     if (this.is("Block")) {
       children.push(...this.getBlock().getChildrenNodes());
+    } else if (this.is("Section")) {
+      children.push(...this.getSection().getChildrenNodes());
     } else if (this.source instanceof Node) {
       children.push(this.source);
     }
@@ -920,6 +955,12 @@ var StmtNode = class _StmtNode extends Node {
   }
   getBlock() {
     if (this.is("Block")) {
+      return this.source;
+    }
+    return void 0;
+  }
+  getSection() {
+    if (this.is("Section")) {
       return this.source;
     }
     return void 0;
@@ -1049,6 +1090,9 @@ var StmtNode = class _StmtNode extends Node {
   }
   static asBlock(span, stmts) {
     return _StmtNode.create("Block", span, BlockStmtNode.create(span, stmts));
+  }
+  static asSection(span, nameInfo, indent, stmts) {
+    return _StmtNode.create("Section", span, SectionStmtNode.create(span, nameInfo, indent, stmts));
   }
   static asUse(span, visibility, targetArr, alias, path, pathSpan, documents) {
     return _StmtNode.create("Use", span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
@@ -1660,7 +1704,6 @@ var ErrsetTypeNode = class _ErrsetTypeNode extends Node {
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
   getChildrenNodes() {
     const children = [];
-    children.push(...this.members);
     return children;
   }
   clone(newSpan) {

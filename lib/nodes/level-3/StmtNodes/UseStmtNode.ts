@@ -6,8 +6,8 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { Span, Node, VisibilityInfo } from '../../node';
-    import { IdentNode } from '../../level-4/CommonNodes/IdentNode';
+    import { Span, Node, VisibilityInfo }   from '../../node';
+    import { IdentNode }                    from '../../level-4/CommonNodes/IdentNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 

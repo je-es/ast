@@ -6,8 +6,8 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { Span, Node } from '../../node';
-    import { ExprNode } from '../../level-2/ExprNode';
+    import { Span, Node }   from '../../node';
+    import { ExprNode }     from '../../level-2/ExprNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 

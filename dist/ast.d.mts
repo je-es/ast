@@ -295,14 +295,14 @@ declare class EnumVariantNode extends Node {
 
 declare class ErrsetTypeNode extends Node {
     span: Span;
-    members: IdentNode[];
+    members: NameInfo[];
     kind: "errset";
     level: number;
-    constructor(span: Span, members: IdentNode[]);
+    constructor(span: Span, members: NameInfo[]);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): ErrsetTypeNode;
     toString(): string;
-    static create(span: Span, members: IdentNode[]): ErrsetTypeNode;
+    static create(span: Span, members: NameInfo[]): ErrsetTypeNode;
 }
 
 declare class ParenTypeNode extends Node {
@@ -399,7 +399,7 @@ declare class TypeNode extends Node {
     static asU32Array(span: Span | undefined, mutable?: boolean): TypeNode;
     static asTuple(span: Span | undefined, fields: TypeNode[]): TypeNode;
     static asFunction(span: Span | undefined, params: TypeNode[], returnType?: TypeNode, errorType?: TypeNode): TypeNode;
-    static asErrset(span: Span | undefined, members: IdentNode[]): TypeNode;
+    static asErrset(span: Span | undefined, members: NameInfo[]): TypeNode;
     static asStruct(span: Span | undefined, members: StructMemberNode[], name?: string): TypeNode;
     static asEnum(span: Span | undefined, variants: EnumVariantNode[], name?: string): TypeNode;
     static asUnion(span: Span | undefined, types: TypeNode[]): TypeNode;
@@ -786,6 +786,19 @@ declare class BlockStmtNode extends Node {
     static create(span: Span, stmts?: StmtNode[]): BlockStmtNode;
 }
 
+declare class SectionStmtNode extends Node {
+    span: Span;
+    name: NameInfo;
+    indent: number;
+    stmts: StmtNode[];
+    kind: "Section";
+    level: number;
+    constructor(span: Span, name: NameInfo, indent: number, stmts: StmtNode[]);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): SectionStmtNode;
+    static create(span: Span, name: NameInfo, indent: number, stmts?: StmtNode[]): SectionStmtNode;
+}
+
 declare class LetStmtNode extends Node {
     span: Span;
     field: FieldNode;
@@ -919,8 +932,8 @@ declare class TestStmtNode extends Node {
     static create(span: Span, name: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): TestStmtNode;
 }
 
-type StmtKind = 'Unset' | 'Expression' | 'Block' | 'Use' | 'Def' | 'Let' | 'Func' | 'For' | 'While' | 'Return' | 'Break' | 'Continue' | 'Defer' | 'Throw' | 'Do' | 'Test';
-type StmtTypes = ExprNode | BlockStmtNode | TestStmtNode | LetStmtNode | FuncStmtNode | UseStmtNode | DefStmtNode | LoopStmtNode | ControlFlowStmtNode;
+type StmtKind = 'Unset' | 'Expression' | 'Block' | 'Use' | 'Def' | 'Let' | 'Func' | 'For' | 'While' | 'Return' | 'Break' | 'Continue' | 'Defer' | 'Throw' | 'Do' | 'Test' | 'Section';
+type StmtTypes = ExprNode | BlockStmtNode | TestStmtNode | LetStmtNode | FuncStmtNode | UseStmtNode | DefStmtNode | LoopStmtNode | ControlFlowStmtNode | SectionStmtNode;
 declare class StmtNode extends Node {
     kind: StmtKind;
     span: Span;
@@ -931,6 +944,7 @@ declare class StmtNode extends Node {
     clone(newSpan?: Span): StmtNode;
     getExpr(): ExprNode | undefined;
     getBlock(): BlockStmtNode | undefined;
+    getSection(): SectionStmtNode | undefined;
     getTest(): TestStmtNode | undefined;
     getUse(): UseStmtNode | undefined;
     getDef(): DefStmtNode | undefined;
@@ -951,6 +965,7 @@ declare class StmtNode extends Node {
     static create(kind: StmtKind, span: Span, data: StmtTypes): StmtNode;
     static asExpr(span: Span, expr: ExprNode): StmtNode;
     static asBlock(span: Span, stmts: StmtNode[]): StmtNode;
+    static asSection(span: Span, nameInfo: NameInfo, indent: number, stmts: StmtNode[]): StmtNode;
     static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): StmtNode;
     static asDefine(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): StmtNode;
     static asLet(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): StmtNode;

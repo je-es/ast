@@ -1,4 +1,4 @@
-// ..?
+// CatchNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -7,8 +7,8 @@
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
     import { Span, Node }   from '../../node';
-    import { StmtNode }         from '../../level-1/StmtNode';
-    import { ExprNode }         from '../../level-2/ExprNode';
+    import { StmtNode }     from '../../level-1/StmtNode';
+    import { ExprNode }     from '../../level-2/ExprNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 

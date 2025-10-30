@@ -8,7 +8,6 @@
 
     import { Span, Node }   from '../../node';
     import { ExprNode }     from '../../level-2/ExprNode';
-    import { TypeNode }     from '../../level-2/TypeNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
