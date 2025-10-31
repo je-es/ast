@@ -3348,6 +3348,7 @@ export {
   PropNode,
   RangeNode,
   ReturnStmtNode,
+  SectionStmtNode,
   SizeofNode,
   StmtNode,
   StructMemberNode,

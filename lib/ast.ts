@@ -25,6 +25,7 @@
     export { StmtNode }             from './nodes/level-1/StmtNode';
 
     export { BlockStmtNode }        from './nodes/level-3/StmtNodes/BlockStmtNode';
+    export { SectionStmtNode }      from './nodes/level-3/StmtNodes/SectionStmtNode';
     export { TestStmtNode }         from './nodes/level-3/StmtNodes/TestStmtNode';
 
     export { ReturnStmtNode }       from './nodes/level-3/StmtNodes/ReturnStmtNode';
