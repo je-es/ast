@@ -7,7 +7,20 @@
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
     import { StmtNode, StmtKind }   from '../nodes/level-1/StmtNode';
-    import { FuncStmtNode }             from '../nodes/level-3/StmtNodes/FuncStmtNode';
+    import { FuncStmtNode }         from '../nodes/level-3/StmtNodes/FuncStmtNode';
+
+// ╚══════════════════════════════════════════════════════════════════════════════════════╝
+
+
+
+// ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
+
+    // TODO: improve it.
+    export interface ModuleMetadata {
+        name?           : string;
+        path            : string;
+        [key: string]   : unknown;
+    }
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -24,7 +37,7 @@
                 public statements   : StmtNode[],
                 public exports      : string[],
                 public imports      : string[],
-                public metadata     : Record<string, unknown>,
+                public metadata     : ModuleMetadata,
             ) { }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -32,7 +45,7 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(name: string, stmts?: StmtNode[], metadata?: Record<string, unknown>): Module {
+            static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata): Module {
                 return new Module(name, stmts || [], [], [], metadata || {});
             }
 

@@ -1030,14 +1030,19 @@ declare class StmtNode extends Node {
     is(kind: StmtKind): boolean;
 }
 
+interface ModuleMetadata {
+    name?: string;
+    path: string;
+    [key: string]: unknown;
+}
 declare class Module {
     name: string;
     statements: StmtNode[];
     exports: string[];
     imports: string[];
-    metadata: Record<string, unknown>;
-    constructor(name: string, statements: StmtNode[], exports: string[], imports: string[], metadata: Record<string, unknown>);
-    static create(name: string, stmts?: StmtNode[], metadata?: Record<string, unknown>): Module;
+    metadata: ModuleMetadata;
+    constructor(name: string, statements: StmtNode[], exports: string[], imports: string[], metadata: ModuleMetadata);
+    static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata): Module;
     validate(): boolean;
     findStatements(predicate: (stmt: StmtNode) => boolean): StmtNode[];
     findStatement(predicate: (stmt: StmtNode) => boolean): StmtNode | undefined;
@@ -1056,11 +1061,18 @@ declare class Module {
     getPath(): string;
 }
 
+interface ProgramMetadata {
+    name?: string;
+    desc?: string;
+    version?: string;
+    path: string;
+    [key: string]: unknown;
+}
 declare class Program {
     modules: Map<string, Module>;
-    metadata?: Record<string, unknown> | undefined;
-    constructor(modules: Map<string, Module>, metadata?: Record<string, unknown> | undefined);
-    static create(modules?: Module[], metadata?: Record<string, unknown>): Program;
+    metadata: ProgramMetadata;
+    constructor(modules: Map<string, Module>, metadata: ProgramMetadata);
+    static create(modules: Module[], metadata: ProgramMetadata): Program;
     findModules(predicate: (module: Module, name: string) => boolean): [string, Module][];
     findModule(predicate: (module: Module, name: string) => boolean): [string, Module] | undefined;
     removeModule(name: string): Program;

@@ -12,6 +12,21 @@
 
 
 
+// ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
+
+    // TODO: improve it.
+    export interface ProgramMetadata {
+        name?           : string;
+        desc?           : string;
+        version?        : string;
+        path            : string;
+        [key: string]   : unknown;
+    }
+
+// ╚══════════════════════════════════════════════════════════════════════════════════════╝
+
+
+
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
     export class Program {
@@ -20,7 +35,7 @@
 
             constructor(
                 public modules      : Map<string, Module>,
-                public metadata?    : Record<string, unknown>,
+                public metadata     : ProgramMetadata,
             ) { }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -28,7 +43,7 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(modules?: Module[], metadata?: Record<string, unknown>): Program {
+            static create(modules: Module[], metadata: ProgramMetadata): Program {
                 // create module map from modules
                 const modulesMap = new Map<string, Module>();
                 for (const module of modules || []) {
