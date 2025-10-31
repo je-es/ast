@@ -44,10 +44,10 @@
 // ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
 
     export type ExprKind =
-    | 'Unset'           | 'Primary'     | 'Postfix'     | 'Prefix'
-    | 'Binary'          | 'Cond'        | 'If'          | 'Match'
-    | 'Catch'           | 'Try'         | 'Range'       | 'Orelse'
-    | 'As'              | 'Typeof'      | 'Sizeof';
+    | 'unset'           | 'primary'     | 'postfix'     | 'prefix'
+    | 'binary'          | 'cond'        | 'if'          | 'match'
+    | 'catch'           | 'try'         | 'range'       | 'orelse'
+    | 'as'              | 'typeof'      | 'sizeof';
 
     export type ExprTypes =
     | PrimaryNode       | PostfixNode   | PrefixNode    | BinaryNode
@@ -92,48 +92,48 @@
 
         // ┌──────────────────────────────── HELP ──────────────────────────────┐
 
-            getPrimary()        : PrimaryNode       | undefined     { return this.is('Primary')     ? this.data as PrimaryNode      : undefined; }
-            getPostfix()        : PostfixNode       | undefined     { return this.is('Postfix')     ? this.data as PostfixNode      : undefined; }
-            getPrefix()         : PrefixNode        | undefined     { return this.is('Prefix')      ? this.data as PrefixNode       : undefined; }
-            getBinary()         : BinaryNode        | undefined     { return this.is('Binary')      ? this.data as BinaryNode       : undefined; }
-            getConditional()    : ConditionalNode   | undefined     { return this.is('Cond')        ? this.data as ConditionalNode  : undefined; }
-            getIf()             : IfNode            | undefined     { return this.is('If')          ? this.data as IfNode           : undefined; }
-            getMatch()          : MatchNode         | undefined     { return this.is('Match')       ? this.data as MatchNode        : undefined; }
-            getCatch()          : CatchNode         | undefined     { return this.is('Catch')       ? this.data as CatchNode        : undefined; }
-            getTry()            : TryNode           | undefined     { return this.is('Try')         ? this.data as TryNode          : undefined; }
-            getRange()          : RangeNode         | undefined     { return this.is('Range')       ? this.data as RangeNode        : undefined; }
-            getOrelse()         : OrelseNode        | undefined     { return this.is('Orelse')      ? this.data as OrelseNode       : undefined; }
-            getAs()             : AsNode            | undefined     { return this.is('As')          ? this.data as AsNode           : undefined; }
+            getPrimary()        : PrimaryNode       | undefined     { return this.is('primary')     ? this.data as PrimaryNode      : undefined; }
+            getPostfix()        : PostfixNode       | undefined     { return this.is('postfix')     ? this.data as PostfixNode      : undefined; }
+            getPrefix()         : PrefixNode        | undefined     { return this.is('prefix')      ? this.data as PrefixNode       : undefined; }
+            getBinary()         : BinaryNode        | undefined     { return this.is('binary')      ? this.data as BinaryNode       : undefined; }
+            getConditional()    : ConditionalNode   | undefined     { return this.is('cond')        ? this.data as ConditionalNode  : undefined; }
+            getIf()             : IfNode            | undefined     { return this.is('if')          ? this.data as IfNode           : undefined; }
+            getMatch()          : MatchNode         | undefined     { return this.is('match')       ? this.data as MatchNode        : undefined; }
+            getCatch()          : CatchNode         | undefined     { return this.is('catch')       ? this.data as CatchNode        : undefined; }
+            getTry()            : TryNode           | undefined     { return this.is('try')         ? this.data as TryNode          : undefined; }
+            getRange()          : RangeNode         | undefined     { return this.is('range')       ? this.data as RangeNode        : undefined; }
+            getOrelse()         : OrelseNode        | undefined     { return this.is('orelse')      ? this.data as OrelseNode       : undefined; }
+            getAs()             : AsNode            | undefined     { return this.is('as')          ? this.data as AsNode           : undefined; }
 
-            getTypeof()         : TypeofNode        | undefined     { return this.is('Typeof')      ? this.data as TypeofNode      : undefined; }
-            getSizeof()         : SizeofNode        | undefined     { return this.is('Sizeof')      ? this.data as SizeofNode      : undefined; }
+            getTypeof()         : TypeofNode        | undefined     { return this.is('typeof')      ? this.data as TypeofNode      : undefined; }
+            getSizeof()         : SizeofNode        | undefined     { return this.is('sizeof')      ? this.data as SizeofNode      : undefined; }
 
-            getLiteral()        : LiteralNode       | undefined     { return this.is('Primary') && this.getPrimary()!.is('Literal') ? this.getPrimary()!.getLiteral() : undefined; }
-            getIdent()          : IdentNode         | undefined     { return this.is('Primary') && this.getPrimary()!.is('Ident')   ? this.getPrimary()!.getIdent()   : undefined; }
-            getParen()          : ParenNode         | undefined     { return this.is('Primary') && this.getPrimary()!.is('Paren')   ? this.getPrimary()!.getParen()   : undefined; }
-            getObject()         : ObjectNode        | undefined     { return this.is('Primary') && this.getPrimary()!.is('Object')  ? this.getPrimary()!.getObject()  : undefined; }
-            getTuple()          : ExprTupleNode     | undefined     { return this.is('Primary') && this.getPrimary()!.is('Tuple')   ? this.getPrimary()!.getTuple()   : undefined; }
-            getType()           : TypeNode          | undefined     { return this.is('Primary') && this.getPrimary()!.is('Type')    ? this.getPrimary()!.getType()    : undefined; }
+            getLiteral()        : LiteralNode       | undefined     { return this.is('primary') && this.getPrimary()!.is('literal') ? this.getPrimary()!.getLiteral() : undefined; }
+            getIdent()          : IdentNode         | undefined     { return this.is('primary') && this.getPrimary()!.is('ident')   ? this.getPrimary()!.getIdent()   : undefined; }
+            getParen()          : ParenNode         | undefined     { return this.is('primary') && this.getPrimary()!.is('paren')   ? this.getPrimary()!.getParen()   : undefined; }
+            getObject()         : ObjectNode        | undefined     { return this.is('primary') && this.getPrimary()!.is('object')  ? this.getPrimary()!.getObject()  : undefined; }
+            getTuple()          : ExprTupleNode     | undefined     { return this.is('primary') && this.getPrimary()!.is('tuple')   ? this.getPrimary()!.getTuple()   : undefined; }
+            getType()           : TypeNode          | undefined     { return this.is('primary') && this.getPrimary()!.is('type')    ? this.getPrimary()!.getType()    : undefined; }
 
             is(kind: ExprKind)  { return this.kind === kind; }
             isOrEndWith(kind: ExprKind) : boolean { return (this.is(kind) || this.isParen() && this.getParen()!.source.isOrEndWith(kind)) || false; }
 
-            isIdent()           { return this.is('Primary') && this.getPrimary()!.is('Ident'); }
-            isLiteral()         { return this.is('Primary') && this.getPrimary()!.is('Literal'); }
-            isUnreachable()     { return this.is('Primary') && this.getPrimary()!.is('Unreachable'); }
-            isObject()          { return this.is('Primary') && this.getPrimary()!.is('Object'); }
-            isParen()           { return this.is('Primary') && this.getPrimary()!.is('Paren'); }
-            isTuple()           { return this.is('Primary') && this.getPrimary()!.is('Tuple'); }
-            isType()            { return this.is('Primary') && this.getPrimary()!.is('Type'); }
+            isIdent()           { return this.is('primary') && this.getPrimary()!.is('ident'); }
+            isLiteral()         { return this.is('primary') && this.getPrimary()!.is('literal'); }
+            isUnreachable()     { return this.is('primary') && this.getPrimary()!.is('unreachable'); }
+            isObject()          { return this.is('primary') && this.getPrimary()!.is('object'); }
+            isParen()           { return this.is('primary') && this.getPrimary()!.is('paren'); }
+            isTuple()           { return this.is('primary') && this.getPrimary()!.is('tuple'); }
+            isType()            { return this.is('primary') && this.getPrimary()!.is('type'); }
 
-            isMemberAccess()    { return this.is('Postfix') && this.getPostfix()!.is('MemberAccess'); }
-            isArrayAccess()     { return this.is('Postfix') && this.getPostfix()!.is('ArrayAccess'); }
-            isCall()            { return this.is('Postfix') && this.getPostfix()!.is('Call'); }
-            isOrelse()          { return this.is('Orelse'); }
-            isAs()              { return this.is('As'); }
+            isMemberAccess()    { return this.is('postfix') && this.getPostfix()!.is('memberAccess'); }
+            isArrayAccess()     { return this.is('postfix') && this.getPostfix()!.is('arrayAccess'); }
+            isCall()            { return this.is('postfix') && this.getPostfix()!.is('call'); }
+            isOrelse()          { return this.is('orelse'); }
+            isAs()              { return this.is('as'); }
 
-            isTypeof()          { return this.is('Typeof'); }
-            isSizeof()          { return this.is('Sizeof'); }
+            isTypeof()          { return this.is('typeof'); }
+            isSizeof()          { return this.is('sizeof'); }
 
         // └────────────────────────────────────────────────────────────────────┘
 
@@ -143,7 +143,7 @@
             // ────────────────────────── Primary ──────────────────────────
 
                 static asPrimary(span: Span, source: PrimaryNode) : ExprNode {
-                    return new ExprNode('Primary', span, source); }
+                    return new ExprNode('primary', span, source); }
 
                 static asLiteral(span: Span, kind: LiteralNode["kind"], value: LiteralNode["value"]) : ExprNode {
                     return ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asLiteral(kind, span, value)); }
@@ -192,7 +192,7 @@
             // ────────────────────────── Postfix ──────────────────────────
 
                 static asPostfix(span: Span, source: PostfixNode) : ExprNode {
-                    return new ExprNode('Postfix', span, source); }
+                    return new ExprNode('postfix', span, source); }
 
                 static asPostIncrement(span: Span, base: ExprNode) : ExprNode {
                     return ExprNode.asPostfix(span || DEF_SPAN, PostfixNode.asIncrement(span || DEF_SPAN, base)); }
@@ -215,63 +215,63 @@
             // ────────────────────────── Prefix ──────────────────────────
 
                 static asPrefix(span: Span, source: PrefixNode) : ExprNode {
-                    return new ExprNode('Prefix', span, source); }
+                    return new ExprNode('prefix', span, source); }
 
                 static asPreIncrement(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('Increment', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('increment', span, base)); }
 
                 static asPreDecrement(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('Decrement', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('decrement', span, base)); }
 
                 static asReference(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('Reference', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('reference', span, base)); }
 
                 static asUnaryMinus(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('UnaryMinus', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('unaryMinus', span, base)); }
 
                 static asUnaryPlus(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('UnaryPlus', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('unaryPlus', span, base)); }
 
                 static asLogicalNot(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('LogicalNot', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('logicalNot', span, base)); }
 
                 static asxBitwiseNot(span: Span, base: ExprNode) : ExprNode {
-                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('BitwiseNot', span, base)); }
+                    return ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create('bitwiseNot', span, base)); }
 
             // ────────────────────────── Rest ──────────────────────────
 
                 static asBinary(span:Span, left: ExprNode, operator: string, right: ExprNode) : ExprNode {
-                    return new ExprNode('Binary', span, BinaryNode.create(span || DEF_SPAN, left, operator, right)); }
+                    return new ExprNode('binary', span, BinaryNode.create(span || DEF_SPAN, left, operator, right)); }
 
                 static asConditional(span: Span, condExpr: ExprNode, trueExpr: ExprNode, falseExpr: ExprNode) : ExprNode {
-                    return new ExprNode('Cond', span, ConditionalNode.create(span || DEF_SPAN, condExpr, trueExpr, falseExpr)); }
+                    return new ExprNode('cond', span, ConditionalNode.create(span || DEF_SPAN, condExpr, trueExpr, falseExpr)); }
 
                 static asIf(span: Span, condExpr: ExprNode, thenStmt: StmtNode, elseStmt: StmtNode | null) : ExprNode {
-                    return new ExprNode('If', span, IfNode.create(span || DEF_SPAN, condExpr, thenStmt, elseStmt)); }
+                    return new ExprNode('if', span, IfNode.create(span || DEF_SPAN, condExpr, thenStmt, elseStmt)); }
 
                 static asMatch(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null) : ExprNode {
-                    return new ExprNode('Match', span, MatchNode.create(span || DEF_SPAN, condExpr, cases, defCase)); }
+                    return new ExprNode('match', span, MatchNode.create(span || DEF_SPAN, condExpr, cases, defCase)); }
 
                 static asCatch(span: Span, leftExpr: ExprNode, tag: ExprNode | null, rightStmt: StmtNode) : ExprNode {
-                    return new ExprNode('Catch', span, CatchNode.create(span || DEF_SPAN, leftExpr, tag, rightStmt)); }
+                    return new ExprNode('catch', span, CatchNode.create(span || DEF_SPAN, leftExpr, tag, rightStmt)); }
 
                 static asTry(span: Span, expr: ExprNode) : ExprNode {
-                    return new ExprNode('Try', span, TryNode.create(span || DEF_SPAN, expr)); }
+                    return new ExprNode('try', span, TryNode.create(span || DEF_SPAN, expr)); }
 
                 static asRange(span: Span, leftExpr: ExprNode | null, rangeType: string, rightExpr: ExprNode | null) : ExprNode {
-                    return new ExprNode('Range', span, RangeNode.create(span || DEF_SPAN, leftExpr, rangeType, rightExpr)); }
+                    return new ExprNode('range', span, RangeNode.create(span || DEF_SPAN, leftExpr, rangeType, rightExpr)); }
 
                 static asOrelse(span: Span, left: ExprNode, right: ExprNode) : ExprNode {
-                    return new ExprNode('Orelse', span, OrelseNode.create(span || DEF_SPAN, left, right)); }
+                    return new ExprNode('orelse', span, OrelseNode.create(span || DEF_SPAN, left, right)); }
 
                 static asAs(span: Span, base: ExprNode, type: TypeNode) : ExprNode {
-                    return new ExprNode('As', span, AsNode.create(span || DEF_SPAN, base, type)); }
+                    return new ExprNode('as', span, AsNode.create(span || DEF_SPAN, base, type)); }
 
                 static asTypeof(span: Span, type: ExprNode) : ExprNode {
-                    return new ExprNode('Typeof', span, TypeofNode.create(span || DEF_SPAN, type)); }
+                    return new ExprNode('typeof', span, TypeofNode.create(span || DEF_SPAN, type)); }
 
                 static asSizeof(span: Span, type: ExprNode) : ExprNode {
-                    return new ExprNode('Sizeof', span, SizeofNode.create(span || DEF_SPAN, type)); }
+                    return new ExprNode('sizeof', span, SizeofNode.create(span || DEF_SPAN, type)); }
 
         // └────────────────────────────────────────────────────────────────────┘
 

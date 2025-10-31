@@ -406,7 +406,7 @@ declare class TypeNode extends Node {
     static asParen(span: Span | undefined, type: TypeNode): TypeNode;
 }
 
-type PrimaryKind = 'Literal' | 'Ident' | 'Paren' | 'Object' | 'Tuple' | 'Type' | 'Unreachable';
+type PrimaryKind = 'literal' | 'ident' | 'paren' | 'object' | 'tuple' | 'type' | 'unreachable';
 type PrimaryTypes = IdentNode | LiteralNode | ParenNode | ObjectNode | ExprTupleNode | TypeNode;
 declare class PrimaryNode extends Node {
     kind: PrimaryKind;
@@ -473,7 +473,7 @@ declare class CallNode extends Node {
     static create(span: Span, base: ExprNode, args: ExprNode[]): CallNode;
 }
 
-type PostfixKind = 'Increment' | 'Decrement' | 'Dereference' | 'MemberAccess' | 'Call' | 'ArrayAccess';
+type PostfixKind = 'increment' | 'decrement' | 'dereference' | 'memberAccess' | 'call' | 'arrayAccess';
 type PostfixTypes = ExprNode | MemberAccessNode | ArrayAccessNode | CallNode;
 declare class PostfixNode extends Node {
     kind: PostfixKind;
@@ -498,7 +498,7 @@ declare class PostfixNode extends Node {
     static asCall(span: Span, base: ExprNode, args: ExprNode[]): PostfixNode;
 }
 
-type PrefixKind = 'Increment' | 'Decrement' | 'Reference' | 'UnaryMinus' | 'UnaryPlus' | 'LogicalNot' | 'BitwiseNot';
+type PrefixKind = 'increment' | 'decrement' | 'reference' | 'unaryMinus' | 'unaryPlus' | 'logicalNot' | 'bitwiseNot';
 declare class PrefixNode extends Node {
     kind: PrefixKind;
     span: Span;
@@ -511,7 +511,7 @@ declare class PrefixNode extends Node {
     static create(kind: PrefixKind, span: Span, expr: ExprNode): PrefixNode;
 }
 
-type BinaryKind = 'Unset' | 'Power' | 'Additive' | 'Multiplicative' | 'Shift' | 'Relational' | 'Equality' | 'Bitwise' | 'Logical' | 'BitwiseAnd' | 'BitwiseOr' | 'BitwiseXor' | 'LogicalAnd' | 'LogicalOr' | 'Conditional' | 'Assignment';
+type BinaryKind = 'unset' | 'power' | 'additive' | 'multiplicative' | 'shift' | 'relational' | 'equality' | 'bitwise' | 'logical' | 'bitwiseAnd' | 'bitwiseOr' | 'bitwiseXor' | 'logicalAnd' | 'logicalOr' | 'conditional' | 'assignment';
 declare class BinaryNode extends Node {
     kind: BinaryKind;
     span: Span;
@@ -531,7 +531,7 @@ declare class ConditionalNode extends Node {
     condExpr: ExprNode;
     trueExpr: ExprNode;
     falseExpr: ExprNode;
-    kind: "Conditional";
+    kind: "conditional";
     level: number;
     constructor(span: Span, condExpr: ExprNode, trueExpr: ExprNode, falseExpr: ExprNode);
     getChildrenNodes(): Node[];
@@ -544,7 +544,7 @@ declare class IfNode extends Node {
     condExpr: ExprNode;
     thenStmt: StmtNode;
     elseStmt: StmtNode | null;
-    kind: "If";
+    kind: "if";
     level: number;
     constructor(span: Span, condExpr: ExprNode, thenStmt: StmtNode, elseStmt: StmtNode | null);
     getChildrenNodes(): Node[];
@@ -582,7 +582,7 @@ declare class MatchNode extends Node {
     condExpr: ExprNode;
     cases: CaseNode[];
     defCase: DefaultNode | null;
-    kind: "Match";
+    kind: "match";
     level: number;
     constructor(span: Span, condExpr: ExprNode, cases: CaseNode[], defCase: DefaultNode | null);
     getChildrenNodes(): Node[];
@@ -595,7 +595,7 @@ declare class CatchNode extends Node {
     leftExpr: ExprNode;
     tag: ExprNode | null;
     rightStmt: StmtNode;
-    kind: "Catch";
+    kind: "catch";
     level: number;
     constructor(span: Span, leftExpr: ExprNode, tag: ExprNode | null, rightStmt: StmtNode);
     getChildrenNodes(): Node[];
@@ -606,7 +606,7 @@ declare class CatchNode extends Node {
 declare class TryNode extends Node {
     span: Span;
     expr: ExprNode;
-    kind: "Try";
+    kind: "try";
     level: number;
     constructor(span: Span, expr: ExprNode);
     getChildrenNodes(): Node[];
@@ -619,7 +619,7 @@ declare class RangeNode extends Node {
     leftExpr: ExprNode | null;
     rangeType: string;
     rightExpr: ExprNode | null;
-    kind: "Range";
+    kind: "range";
     level: number;
     constructor(span: Span, leftExpr: ExprNode | null, rangeType: string, rightExpr: ExprNode | null);
     getChildrenNodes(): Node[];
@@ -685,7 +685,7 @@ declare class SizeofNode extends Node {
     static create(span: Span, expr: ExprNode): SizeofNode;
 }
 
-type ExprKind = 'Unset' | 'Primary' | 'Postfix' | 'Prefix' | 'Binary' | 'Cond' | 'If' | 'Match' | 'Catch' | 'Try' | 'Range' | 'Orelse' | 'As' | 'Typeof' | 'Sizeof';
+type ExprKind = 'unset' | 'primary' | 'postfix' | 'prefix' | 'binary' | 'cond' | 'if' | 'match' | 'catch' | 'try' | 'range' | 'orelse' | 'as' | 'typeof' | 'sizeof';
 type ExprTypes = PrimaryNode | PostfixNode | PrefixNode | BinaryNode | ConditionalNode | IfNode | MatchNode | CatchNode | TryNode | RangeNode | OrelseNode | AsNode | TypeofNode | SizeofNode;
 declare class ExprNode extends Node {
     kind: ExprKind;
@@ -778,7 +778,7 @@ declare class ExprNode extends Node {
 declare class BlockStmtNode extends Node {
     span: Span;
     stmts: StmtNode[];
-    kind: "Block";
+    kind: "block";
     level: number;
     constructor(span: Span, stmts: StmtNode[]);
     getChildrenNodes(): Node[];
@@ -880,43 +880,40 @@ declare class DefStmtNode extends Node {
     static create(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): DefStmtNode;
 }
 
-type LoopKind = 'For' | 'While' | 'Do';
-declare class LoopStmtNode extends Node {
+declare class ForStmtNode extends Node {
     span: Span;
-    kind: LoopKind;
     expr: ExprNode;
     stmt: StmtNode;
     level: number;
-    constructor(span: Span, kind: LoopKind, expr: ExprNode, stmt: StmtNode);
+    kind: "for";
+    constructor(span: Span, expr: ExprNode, stmt: StmtNode);
     getChildrenNodes(): Node[];
-    clone(newSpan?: Span): LoopStmtNode;
-    isFor(): boolean;
-    isWhile(): boolean;
-    isDo(): boolean;
-    static createFor(span: Span, expr: ExprNode, stmt: StmtNode): LoopStmtNode;
-    static createWhile(span: Span, expr: ExprNode, stmt: StmtNode): LoopStmtNode;
-    static createDo(span: Span, expr: ExprNode, stmt: StmtNode): LoopStmtNode;
+    clone(newSpan?: Span): ForStmtNode;
+    static create(span: Span, expr: ExprNode, stmt: StmtNode): ForStmtNode;
 }
 
-type ControlFlowKind = 'return' | 'break' | 'continue' | 'defer' | 'throw';
-declare class ControlFlowStmtNode extends Node {
+declare class WhileStmtNode extends Node {
     span: Span;
-    kind: ControlFlowKind;
-    value?: ExprNode | undefined;
+    expr: ExprNode;
+    stmt: StmtNode;
     level: number;
-    constructor(span: Span, kind: ControlFlowKind, value?: ExprNode | undefined);
+    kind: "while";
+    constructor(span: Span, expr: ExprNode, stmt: StmtNode);
     getChildrenNodes(): Node[];
-    clone(newSpan?: Span): ControlFlowStmtNode;
-    isReturn(): boolean;
-    isDefer(): boolean;
-    isThrow(): boolean;
-    isBreak(): boolean;
-    isContinue(): boolean;
-    static asReturn(span: Span, value?: ExprNode): ControlFlowStmtNode;
-    static asDefer(span: Span, value?: ExprNode): ControlFlowStmtNode;
-    static asThrow(span: Span, value?: ExprNode): ControlFlowStmtNode;
-    static asBreak(span: Span): ControlFlowStmtNode;
-    static asContinue(span: Span): ControlFlowStmtNode;
+    clone(newSpan?: Span): WhileStmtNode;
+    static create(span: Span, expr: ExprNode, stmt: StmtNode): WhileStmtNode;
+}
+
+declare class DoStmtNode extends Node {
+    span: Span;
+    expr: ExprNode;
+    stmt: StmtNode;
+    level: number;
+    kind: "do";
+    constructor(span: Span, expr: ExprNode, stmt: StmtNode);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): DoStmtNode;
+    static create(span: Span, expr: ExprNode, stmt: StmtNode): DoStmtNode;
 }
 
 declare class TestStmtNode extends Node {
@@ -932,8 +929,61 @@ declare class TestStmtNode extends Node {
     static create(span: Span, name: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): TestStmtNode;
 }
 
-type StmtKind = 'Unset' | 'Expression' | 'Block' | 'Use' | 'Def' | 'Let' | 'Func' | 'For' | 'While' | 'Return' | 'Break' | 'Continue' | 'Defer' | 'Throw' | 'Do' | 'Test' | 'Section';
-type StmtTypes = ExprNode | BlockStmtNode | TestStmtNode | LetStmtNode | FuncStmtNode | UseStmtNode | DefStmtNode | LoopStmtNode | ControlFlowStmtNode | SectionStmtNode;
+declare class BreakStmtNode extends Node {
+    span: Span;
+    level: number;
+    kind: "break";
+    constructor(span: Span);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): BreakStmtNode;
+    static create(span: Span): BreakStmtNode;
+}
+
+declare class ContinueStmtNode extends Node {
+    span: Span;
+    level: number;
+    kind: "continue";
+    constructor(span: Span);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): ContinueStmtNode;
+    static create(span: Span): ContinueStmtNode;
+}
+
+declare class ReturnStmtNode extends Node {
+    span: Span;
+    expr?: ExprNode | undefined;
+    level: number;
+    kind: "return";
+    constructor(span: Span, expr?: ExprNode | undefined);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): ReturnStmtNode;
+    static create(span: Span, expr?: ExprNode): ReturnStmtNode;
+}
+
+declare class DeferStmtNode extends Node {
+    span: Span;
+    expr: ExprNode;
+    level: number;
+    kind: "defer";
+    constructor(span: Span, expr: ExprNode);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): DeferStmtNode;
+    static create(span: Span, expr: ExprNode): DeferStmtNode;
+}
+
+declare class ThrowStmtNode extends Node {
+    span: Span;
+    expr: ExprNode;
+    level: number;
+    kind: "throw";
+    constructor(span: Span, expr: ExprNode);
+    getChildrenNodes(): Node[];
+    clone(newSpan?: Span): ThrowStmtNode;
+    static create(span: Span, expr: ExprNode): ThrowStmtNode;
+}
+
+type StmtKind = 'unset' | 'expression' | 'block' | 'use' | 'def' | 'let' | 'func' | 'for' | 'while' | 'return' | 'break' | 'continue' | 'defer' | 'throw' | 'do' | 'test' | 'section';
+type StmtTypes = ExprNode | BlockStmtNode | TestStmtNode | LetStmtNode | FuncStmtNode | UseStmtNode | DefStmtNode | ForStmtNode | WhileStmtNode | DoStmtNode | BreakStmtNode | ContinueStmtNode | ReturnStmtNode | DeferStmtNode | ThrowStmtNode | SectionStmtNode;
 declare class StmtNode extends Node {
     kind: StmtKind;
     span: Span;
@@ -950,16 +1000,14 @@ declare class StmtNode extends Node {
     getDef(): DefStmtNode | undefined;
     getLet(): LetStmtNode | undefined;
     getFunc(): FuncStmtNode | undefined;
-    getLoop(): LoopStmtNode | undefined;
-    getFor(): LoopStmtNode | undefined;
-    getWhile(): LoopStmtNode | undefined;
-    getDo(): LoopStmtNode | undefined;
-    getCtrlflow(): ControlFlowStmtNode | undefined;
-    getReturn(): ControlFlowStmtNode | undefined;
-    getDefer(): ControlFlowStmtNode | undefined;
-    getThrow(): ControlFlowStmtNode | undefined;
-    getBreak(): ControlFlowStmtNode | undefined;
-    getContinue(): ControlFlowStmtNode | undefined;
+    getFor(): ForStmtNode | undefined;
+    getWhile(): WhileStmtNode | undefined;
+    getDo(): DoStmtNode | undefined;
+    getReturn(): ReturnStmtNode | undefined;
+    getDefer(): DeferStmtNode | undefined;
+    getThrow(): ThrowStmtNode | undefined;
+    getBreak(): BreakStmtNode | undefined;
+    getContinue(): ContinueStmtNode | undefined;
     getStmtName(): string | undefined;
     getStmtNameSpan(): Span | undefined;
     static create(kind: StmtKind, span: Span, data: StmtTypes): StmtNode;
@@ -973,9 +1021,9 @@ declare class StmtNode extends Node {
     static asFor(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode;
     static asWhile(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode;
     static asDo(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode;
-    static asReturn(span: Span, value?: ExprNode): StmtNode;
-    static asDefer(span: Span, value?: ExprNode): StmtNode;
-    static asThrow(span: Span, value?: ExprNode): StmtNode;
+    static asReturn(span: Span, expr?: ExprNode): StmtNode;
+    static asDefer(span: Span, expr: ExprNode): StmtNode;
+    static asThrow(span: Span, expr: ExprNode): StmtNode;
     static asBreak(span: Span): StmtNode;
     static asContinue(span: Span): StmtNode;
     static asTest(span: Span, nameInfo: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): StmtNode;
@@ -1025,4 +1073,4 @@ declare class Program {
     getTotalNodes(): number;
 }
 
-export { ArrayAccessNode, ArrayTypeNode, AsNode, BinaryNode, BlockStmtNode, CallNode, CaseNode, CatchNode, type ComptimeInfo, type ComptimeKind, ConditionalNode, ControlFlowStmtNode, DefStmtNode, DefaultNode, EnumTypeNode, EnumVariantNode, ErrsetTypeNode, ExprNode, ExprTupleNode, FieldNode, FuncStmtNode, FunctionTypeNode, IdentNode, IfNode, LetStmtNode, LiteralNode, LoopStmtNode, MatchNode, MemberAccessNode, Module, type MutabilityInfo, type MutabilityKind, type NameInfo, Node, ObjectNode, OptionalTypeNode, OrelseNode, ParenNode, ParenTypeNode, PointerTypeNode, PostfixNode, PrefixNode, PrimaryNode, PrimitiveTypeNode, Program, PropNode, RangeNode, SizeofNode, type Span, StmtNode, StructMemberNode, StructTypeNode, TestStmtNode, TryNode, TupleTypeNode, TypeNode, TypeofNode, UnionTypeNode, UseStmtNode, type VisibilityInfo, type VisibilityKind };
+export { ArrayAccessNode, ArrayTypeNode, AsNode, BinaryNode, BlockStmtNode, BreakStmtNode, CallNode, CaseNode, CatchNode, type ComptimeInfo, type ComptimeKind, ConditionalNode, ContinueStmtNode, DefStmtNode, DefaultNode, DeferStmtNode, DoStmtNode, EnumTypeNode, EnumVariantNode, ErrsetTypeNode, ExprNode, ExprTupleNode, FieldNode, ForStmtNode, FuncStmtNode, FunctionTypeNode, IdentNode, IfNode, LetStmtNode, LiteralNode, MatchNode, MemberAccessNode, Module, type MutabilityInfo, type MutabilityKind, type NameInfo, Node, ObjectNode, OptionalTypeNode, OrelseNode, ParenNode, ParenTypeNode, PointerTypeNode, PostfixNode, PrefixNode, PrimaryNode, PrimitiveTypeNode, Program, PropNode, RangeNode, ReturnStmtNode, SizeofNode, type Span, StmtNode, StructMemberNode, StructTypeNode, TestStmtNode, ThrowStmtNode, TryNode, TupleTypeNode, TypeNode, TypeofNode, UnionTypeNode, UseStmtNode, type VisibilityInfo, type VisibilityKind, WhileStmtNode };

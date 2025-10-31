@@ -20,7 +20,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'If' as const;
+            public kind = 'if' as const;
             public level = 3;
 
             constructor(

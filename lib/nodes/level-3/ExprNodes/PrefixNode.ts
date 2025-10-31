@@ -16,8 +16,8 @@
 // ╔════════════════════════════════════════ INIT ════════════════════════════════════════╗
 
     export type PrefixKind =
-    | 'Increment'    | 'Decrement'       | 'Reference'   | 'UnaryMinus'
-    | 'UnaryPlus'    | 'LogicalNot'      | 'BitwiseNot';
+    | 'increment'    | 'decrement'       | 'reference'   | 'unaryMinus'
+    | 'unaryPlus'    | 'logicalNot'      | 'bitwiseNot';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 

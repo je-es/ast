@@ -23,7 +23,7 @@
 
 // ╔════════════════════════════════════════ INIT ════════════════════════════════════════╗
 
-    export type PrimaryKind = 'Literal' | 'Ident' | 'Paren' | 'Object' | 'Tuple' | 'Type' | 'Unreachable';
+    export type PrimaryKind = 'literal' | 'ident' | 'paren' | 'object' | 'tuple' | 'type' | 'unreachable';
     export type PrimaryTypes = IdentNode | LiteralNode | ParenNode | ObjectNode | ExprTupleNode | TypeNode;
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
@@ -104,22 +104,22 @@
 
             static create(kind: PrimaryKind, span: Span, source?: PrimaryTypes): PrimaryNode {
                 // Validate
-                if(kind === 'Ident' && !(source instanceof IdentNode)) {
+                if(kind === 'ident' && !(source instanceof IdentNode)) {
                     throw new Error(`Invalid kind for primary: ${kind}`);
                 }
-                if(kind === 'Literal' && !(source instanceof LiteralNode)) {
+                if(kind === 'literal' && !(source instanceof LiteralNode)) {
                     throw new Error(`Invalid kind for primary: ${kind}`);
                 }
-                if(kind === 'Object' && !(source instanceof ObjectNode)) {
+                if(kind === 'object' && !(source instanceof ObjectNode)) {
                     throw new Error(`Invalid kind for primary: ${kind}`);
                 }
-                if(kind === 'Paren' && !(source instanceof ParenNode)) {
+                if(kind === 'paren' && !(source instanceof ParenNode)) {
                     throw new Error(`Invalid kind for primary: ${kind}`);
                 }
-                if(kind === 'Tuple' && !(source instanceof ExprTupleNode)) {
+                if(kind === 'tuple' && !(source instanceof ExprTupleNode)) {
                     throw new Error(`Invalid kind for primary: ${kind}`);
                 }
-                if(kind === 'Type' && !(source instanceof TypeNode)) {
+                if(kind === 'type' && !(source instanceof TypeNode)) {
                     throw new Error(`Invalid kind for primary: ${kind}`);
                 }
 
@@ -128,31 +128,31 @@
             }
 
             static asIdent(span:Span, name: string, builtin= false) : PrimaryNode {
-                return this.create('Ident', span, IdentNode.create(span, name, builtin));
+                return this.create('ident', span, IdentNode.create(span, name, builtin));
             }
 
             static asLiteral(kind: LiteralKind, span:Span, value: LiteralValue) : PrimaryNode {
-                return this.create('Literal', span, LiteralNode.create(kind, span, value));
+                return this.create('literal', span, LiteralNode.create(kind, span, value));
             }
 
             static asParen(span:Span, source: ExprNode) : PrimaryNode {
-                return this.create('Paren', span, ParenNode.create(span, source));
+                return this.create('paren', span, ParenNode.create(span, source));
             }
 
             static asObject(span:Span, props: PropNode[], ident: IdentNode | undefined) : PrimaryNode {
-                return this.create('Object', span, ObjectNode.create(span, props, ident));
+                return this.create('object', span, ObjectNode.create(span, props, ident));
             }
 
             static asTuple(span:Span, exprs: ExprNode[]) : PrimaryNode {
-                return this.create('Tuple', span, ExprTupleNode.create(span, exprs));
+                return this.create('tuple', span, ExprTupleNode.create(span, exprs));
             }
 
             static asType(span:Span, type: TypeNode) : PrimaryNode {
-                return this.create('Type', span, type);
+                return this.create('type', span, type);
             }
 
             static asUnreachable(span:Span) : PrimaryNode {
-                return this.create('Unreachable', span);
+                return this.create('unreachable', span);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

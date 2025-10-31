@@ -20,7 +20,7 @@
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
-            public kind = 'Orelse';
+            public kind = 'orelse';
 
             constructor(
                 public span         : Span,

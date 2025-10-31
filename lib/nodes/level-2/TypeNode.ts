@@ -6,7 +6,7 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { DEF_SPAN, NameInfo, Node, Span }                     from '../node';
+    import { DEF_SPAN, NameInfo, Node, Span }           from '../node';
     import { ExprNode }                                 from './ExprNode';
 
     import { PrimitiveKind, PrimitiveTypeNode }         from '../level-3/TypeNodes/PrimitiveTypeNode';

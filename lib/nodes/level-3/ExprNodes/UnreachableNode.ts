@@ -19,7 +19,7 @@
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
-            public kind = 'Unreachable';
+            public kind = 'unreachable';
 
             constructor(
                 public span         : Span,

@@ -15,12 +15,18 @@
     import { FuncStmtNode }             from '../level-3/StmtNodes/FuncStmtNode';
     import { UseStmtNode }              from '../level-3/StmtNodes/UseStmtNode';
     import { DefStmtNode }              from '../level-3/StmtNodes/DefStmtNode';
-    import { LoopStmtNode }             from '../level-3/StmtNodes/LoopStmtNode';
-    import { ControlFlowStmtNode }      from '../level-3/StmtNodes/ControlFlowStmtNode';
+    import { ForStmtNode }              from '../level-3/StmtNodes/ForStmtNode';
+    import { WhileStmtNode }            from '../level-3/StmtNodes/WhileStmtNode';
+    import { DoStmtNode }               from '../level-3/StmtNodes/DoStmtNode';
     import { TypeNode }                 from '../level-2/TypeNode';
     import { FieldNode }                from '../level-5/common/FieldNode';
     import { IdentNode }                from '../level-4/CommonNodes/IdentNode';
     import { TestStmtNode }             from '../level-3/StmtNodes/TestStmtNode';
+    import { BreakStmtNode }            from '../level-3/StmtNodes/BreakStmtNode';
+    import { ContinueStmtNode }         from '../level-3/StmtNodes/ContinueStmtNode';
+    import { ReturnStmtNode }           from '../level-3/StmtNodes/ReturnStmtNode';
+    import { DeferStmtNode }            from '../level-3/StmtNodes/DeferStmtNode';
+    import { ThrowStmtNode }            from '../level-3/StmtNodes/ThrowStmtNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -29,14 +35,15 @@
 // ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
 
     export type StmtKind =
-    | 'Unset'       | 'Expression'  | 'Block'       | 'Use'         | 'Def'
-    | 'Let'         | 'Func'        | 'For'         | 'While'       | 'Return'
-    | 'Break'       | 'Continue'    | 'Defer'       | 'Throw'       | 'Do'
-    | 'Test'        | 'Section';
+    | 'unset'       | 'expression'  | 'block'       | 'use'         | 'def'
+    | 'let'         | 'func'        | 'for'         | 'while'       | 'return'
+    | 'break'       | 'continue'    | 'defer'       | 'throw'       | 'do'
+    | 'test'        | 'section';
 
     export type StmtTypes =
-    | ExprNode      | BlockStmtNode | TestStmtNode  | LetStmtNode   | FuncStmtNode
-    | UseStmtNode   | DefStmtNode   | LoopStmtNode  | ControlFlowStmtNode
+    | ExprNode      | BlockStmtNode     | TestStmtNode  | LetStmtNode   | FuncStmtNode
+    | UseStmtNode   | DefStmtNode       | ForStmtNode   | WhileStmtNode | DoStmtNode
+    | BreakStmtNode | ContinueStmtNode  | ReturnStmtNode| DeferStmtNode | ThrowStmtNode
     | SectionStmtNode;
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
@@ -65,9 +72,9 @@
             public getChildrenNodes(): Node[] {
                 const children: Node[] = [];
 
-                if (this.is('Block')) {
+                if (this.is('block')) {
                     children.push(...this.getBlock()!.getChildrenNodes());
-                } else if (this.is('Section')) {
+                } else if (this.is('section')) {
                     children.push(...this.getSection()!.getChildrenNodes());
                 } else if (this.source instanceof Node) {
                     children.push(this.source);
@@ -86,153 +93,140 @@
         // ┌──────────────────────────────── HELP ──────────────────────────────┐
 
             getExpr(): ExprNode | undefined {
-                if (this.is('Expression')) {
+                if (this.is('expression')) {
                     return this.source as ExprNode;
                 }
                 return undefined;
             }
 
             getBlock(): BlockStmtNode | undefined {
-                if (this.is('Block')) {
+                if (this.is('block')) {
                     return this.source as BlockStmtNode;
                 }
                 return undefined;
             }
 
             getSection(): SectionStmtNode | undefined {
-                if (this.is('Section')) {
+                if (this.is('section')) {
                     return this.source as SectionStmtNode;
                 }
                 return undefined;
             }
 
             getTest(): TestStmtNode | undefined {
-                if (this.is('Test')) {
+                if (this.is('test')) {
                     return this.source as TestStmtNode;
                 }
                 return undefined;
             }
 
             getUse(): UseStmtNode | undefined {
-                if (this.is('Use')) {
+                if (this.is('use')) {
                     return this.source as UseStmtNode;
                 }
                 return undefined;
             }
 
             getDef(): DefStmtNode | undefined {
-                if (this.is('Def')) {
+                if (this.is('def')) {
                     return this.source as DefStmtNode;
                 }
                 return undefined;
             }
 
             getLet(): LetStmtNode | undefined {
-                if (this.is('Let')) {
+                if (this.is('let')) {
                     return this.source as LetStmtNode;
                 }
                 return undefined;
             }
 
             getFunc(): FuncStmtNode | undefined {
-                if (this.is('Func')) {
+                if (this.is('func')) {
                     return this.source as FuncStmtNode;
                 }
                 return undefined;
             }
 
-            getLoop(): LoopStmtNode | undefined {
-                if (this.is('For') || this.is('While') || this.is('Do')) {
-                    return this.source as LoopStmtNode;
+
+            getFor(): ForStmtNode | undefined {
+                if (this.is('for')) {
+                    return this.source as ForStmtNode;
                 }
                 return undefined;
             }
 
-            getFor(): LoopStmtNode | undefined {
-                if (this.is('For')) {
-                    return this.source as LoopStmtNode;
-                }
-                return undefined;
-            }
-
-            getWhile(): LoopStmtNode | undefined {
-                if (this.is('While')) {
-                    return this.source as LoopStmtNode;
+            getWhile(): WhileStmtNode | undefined {
+                if (this.is('while')) {
+                    return this.source as WhileStmtNode;
                 }
                 return undefined;
             }
 
 
-            getDo(): LoopStmtNode | undefined {
-                if (this.is('Do')) {
-                    return this.source as LoopStmtNode;
+            getDo(): DoStmtNode | undefined {
+                if (this.is('do')) {
+                    return this.source as DoStmtNode;
                 }
                 return undefined;
             }
 
-            getCtrlflow(): ControlFlowStmtNode | undefined {
-                if (this.is('Return') || this.is('Defer') || this.is('Throw') || this.is('Break') || this.is('Continue')) {
-                    return this.source as ControlFlowStmtNode;
+            getReturn(): ReturnStmtNode | undefined {
+                if (this.is('return')) {
+                    return this.source as ReturnStmtNode;
                 }
                 return undefined;
             }
 
-            getReturn(): ControlFlowStmtNode | undefined {
-                if (this.is('Return')) {
-                    return this.source as ControlFlowStmtNode;
+            getDefer(): DeferStmtNode | undefined {
+                if (this.is('defer')) {
+                    return this.source as DeferStmtNode;
                 }
                 return undefined;
             }
 
-            getDefer(): ControlFlowStmtNode | undefined {
-                if (this.is('Defer')) {
-                    return this.source as ControlFlowStmtNode;
+            getThrow(): ThrowStmtNode | undefined {
+                if (this.is('throw')) {
+                    return this.source as ThrowStmtNode;
                 }
                 return undefined;
             }
 
-            getThrow(): ControlFlowStmtNode | undefined {
-                if (this.is('Throw')) {
-                    return this.source as ControlFlowStmtNode;
+            getBreak(): BreakStmtNode | undefined {
+                if (this.is('break')) {
+                    return this.source as BreakStmtNode;
                 }
                 return undefined;
             }
 
-            getBreak(): ControlFlowStmtNode | undefined {
-                if (this.is('Break')) {
-                    return this.source as ControlFlowStmtNode;
-                }
-                return undefined;
-            }
-
-            getContinue(): ControlFlowStmtNode | undefined {
-                if (this.is('Continue')) {
-                    return this.source as ControlFlowStmtNode;
+            getContinue(): ContinueStmtNode | undefined {
+                if (this.is('continue')) {
+                    return this.source as ContinueStmtNode;
                 }
                 return undefined;
             }
 
             getStmtName(): string | undefined {
-                if (this.is('Use')) {
+                if (this.is('use')) {
                     return (this.source as UseStmtNode).alias?.name ?? (this.source as UseStmtNode).path ?? 'unknown-use';
-                } else if (this.is('Def')) {
+                } else if (this.is('def')) {
                     return (this.source as DefStmtNode).ident.name;
-                } else if (this.is('Let')) {
+                } else if (this.is('let')) {
                     return (this.source as LetStmtNode).field.ident.name;
-                } else if (this.is('Func')) {
+                } else if (this.is('func')) {
                     return (this.source as FuncStmtNode).ident.name;
                 }
                 return undefined;
             }
 
             getStmtNameSpan(): Span | undefined {
-                if (this.is('Use')) {
+                if (this.is('use')) {
                     return (this.source as UseStmtNode).span;
-                } else if (this.is('Def')) {
+                } else if (this.is('def')) {
                     return (this.source as DefStmtNode).ident.span;
-                } else if (this.is('Let')) {
+                } else if (this.is('let')) {
                     return (this.source as LetStmtNode).field.ident.span;
-                } else if (this.is('Func')) {
+                } else if (this.is('func')) {
                     return (this.source as FuncStmtNode).ident.span;
                 }
                 return undefined;
@@ -248,67 +242,67 @@
             }
 
             static asExpr(span: Span, expr: ExprNode): StmtNode {
-                return StmtNode.create('Expression', span, expr);
+                return StmtNode.create('expression', span, expr);
             }
 
             static asBlock(span: Span, stmts: StmtNode[]): StmtNode {
-                return StmtNode.create('Block', span, BlockStmtNode.create(span, stmts));
+                return StmtNode.create('block', span, BlockStmtNode.create(span, stmts));
             }
 
             static asSection(span: Span, nameInfo: NameInfo, indent: number, stmts: StmtNode[]): StmtNode {
-                return StmtNode.create('Section', span, SectionStmtNode.create(span, nameInfo, indent, stmts));
+                return StmtNode.create('section', span, SectionStmtNode.create(span, nameInfo, indent, stmts));
             }
 
             static asUse(span: Span, visibility: VisibilityInfo, targetArr: IdentNode[] | undefined, alias?: IdentNode, path?: string, pathSpan?: Span, documents?: string[]): StmtNode {
-                return StmtNode.create('Use', span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
+                return StmtNode.create('use', span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
             }
 
             static asDefine(span: Span, visibility: VisibilityInfo, ident: IdentNode, type: TypeNode, documents?: string[]): StmtNode {
-                return StmtNode.create('Def', span, DefStmtNode.create(span, visibility, ident, type, documents));
+                return StmtNode.create('def', span, DefStmtNode.create(span, visibility, ident, type, documents));
             }
 
             static asLet(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, mutability: MutabilityInfo, ident: IdentNode, type?: TypeNode, initializer?: ExprNode, documents?: string[]): StmtNode {
-                return StmtNode.create('Let', span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents));
+                return StmtNode.create('let', span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents));
             }
 
             static asFunc(span: Span, visibility: VisibilityInfo, comptime: ComptimeInfo, isInline: boolean, ident: IdentNode, parameters: FieldNode[], errorType: TypeNode | undefined, returnType: TypeNode | undefined, body: StmtNode, documents?: string[]): StmtNode {
-                return StmtNode.create('Func', span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents));
+                return StmtNode.create('func', span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents));
             }
 
             static asFor(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode {
-                return StmtNode.create('For', span, LoopStmtNode.createFor(span, expr, stmt));
+                return StmtNode.create('for', span, ForStmtNode.create(span, expr, stmt));
             }
 
             static asWhile(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode {
-                return StmtNode.create('While', span, LoopStmtNode.createWhile(span, expr, stmt));
+                return StmtNode.create('while', span, WhileStmtNode.create(span, expr, stmt));
             }
 
             static asDo(span: Span, expr: ExprNode, stmt: StmtNode): StmtNode {
-                return StmtNode.create('Do', span, LoopStmtNode.createDo(span, expr, stmt));
+                return StmtNode.create('do', span, DoStmtNode.create(span, expr, stmt));
             }
 
-            static asReturn(span: Span, value?: ExprNode): StmtNode {
-                return StmtNode.create('Return', span, ControlFlowStmtNode.asReturn(span, value));
+            static asReturn(span: Span, expr?: ExprNode): StmtNode {
+                return StmtNode.create('return', span, ReturnStmtNode.create(span, expr));
             }
 
-            static asDefer(span: Span, value?: ExprNode): StmtNode {
-                return StmtNode.create('Defer', span, ControlFlowStmtNode.asDefer(span, value));
+            static asDefer(span: Span, expr: ExprNode): StmtNode {
+                return StmtNode.create('defer', span, DeferStmtNode.create(span, expr));
             }
 
-            static asThrow(span: Span, value?: ExprNode): StmtNode {
-                return StmtNode.create('Throw', span, ControlFlowStmtNode.asThrow(span, value));
+            static asThrow(span: Span, expr: ExprNode): StmtNode {
+                return StmtNode.create('throw', span, ThrowStmtNode.create(span, expr));
             }
 
             static asBreak(span: Span): StmtNode {
-                return StmtNode.create('Break', span, ControlFlowStmtNode.asBreak(span));
+                return StmtNode.create('break', span, BreakStmtNode.create(span));
             }
 
             static asContinue(span: Span): StmtNode {
-                return StmtNode.create('Continue', span, ControlFlowStmtNode.asContinue(span));
+                return StmtNode.create('continue', span, ContinueStmtNode.create(span));
             }
 
             static asTest(span: Span, nameInfo: NameInfo | undefined, block: BlockStmtNode, documents?: string[]): StmtNode {
-                return StmtNode.create('Test', span, TestStmtNode.create(span, nameInfo, block, documents));
+                return StmtNode.create('test', span, TestStmtNode.create(span, nameInfo, block, documents));
             }
 
         // └────────────────────────────────────────────────────────────────────┘

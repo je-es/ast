@@ -1,4 +1,4 @@
-// ControlFlowStmtNode.ts
+// ThrowStmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -13,26 +13,18 @@
 
 
 
-// ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
-
-    export type ControlFlowKind = 'return' | 'break' | 'continue' | 'defer' | 'throw';
-
-// ╚══════════════════════════════════════════════════════════════════════════════════════╝
-
-
-
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class ControlFlowStmtNode extends Node {
+    export class ThrowStmtNode extends Node {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
+            public kind = 'throw' as const
 
             constructor(
-                public span         : Span,
-                public kind         : ControlFlowKind,
-                public value?       : ExprNode,
+                public span : Span,
+                public expr : ExprNode
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -41,40 +33,14 @@
         // ┌──────────────────────────────── NODE ──────────────────────────────┐
 
             public getChildrenNodes(): Node[] {
-                return this.value ? [this.value] : [];
+                return [this.expr];
             }
 
-            clone(newSpan?: Span): ControlFlowStmtNode {
-                return new ControlFlowStmtNode(
+            clone(newSpan?: Span): ThrowStmtNode {
+                return new ThrowStmtNode(
                     newSpan ?? this.span,
-                    this.kind,
-                    this.value
+                    this.expr
                 );
-            }
-
-        // └────────────────────────────────────────────────────────────────────┘
-
-
-        // ┌──────────────────────────────── IS_X ──────────────────────────────┐
-
-            isReturn(): boolean {
-                return this.kind === 'return';
-            }
-
-            isDefer(): boolean {
-                return this.kind === 'defer';
-            }
-
-            isThrow(): boolean {
-                return this.kind === 'throw';
-            }
-
-            isBreak(): boolean {
-                return this.kind === 'break';
-            }
-
-            isContinue(): boolean {
-                return this.kind === 'continue';
             }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -82,24 +48,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static asReturn(span: Span, value?: ExprNode): ControlFlowStmtNode {
-                return new ControlFlowStmtNode(span, 'return', value);
-            }
-
-            static asDefer(span: Span, value?: ExprNode): ControlFlowStmtNode {
-                return new ControlFlowStmtNode(span, 'defer', value);
-            }
-
-            static asThrow(span: Span, value?: ExprNode): ControlFlowStmtNode {
-                return new ControlFlowStmtNode(span, 'throw', value);
-            }
-
-            static asBreak(span: Span): ControlFlowStmtNode {
-                return new ControlFlowStmtNode(span, 'break');
-            }
-
-            static asContinue(span: Span): ControlFlowStmtNode {
-                return new ControlFlowStmtNode(span, 'continue');
+            static create(span: Span, expr: ExprNode): ThrowStmtNode {
+                return new ThrowStmtNode(span, expr);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

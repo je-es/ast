@@ -1,4 +1,4 @@
-// TryNode.ts
+// ContinueStmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -6,8 +6,7 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { Span, Node }   from '../../node';
-    import { ExprNode }     from '../../level-2/ExprNode';
+    import { Span, Node } from '../../node';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -15,19 +14,16 @@
 
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class TryNode extends Node  {
+    export class ContinueStmtNode extends Node {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'try' as const;
             public level = 3;
+            public kind = 'continue' as const
 
             constructor(
-                public span         : Span,
-                public expr         : ExprNode,
-            ) {
-                super();
-            }
+                public span : Span,
+            ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
 
@@ -35,16 +31,13 @@
         // ┌──────────────────────────────── NODE ──────────────────────────────┐
 
             public getChildrenNodes(): Node[] {
-                const children: Node[] = [];
-
-                children.push(this.expr);
-
-                return children;
+                return [];
             }
 
-            clone(newSpan?: Span): TryNode {
-                const cloned = new TryNode(newSpan || this.span, this.expr);
-                return cloned;
+            clone(newSpan?: Span): ContinueStmtNode {
+                return new ContinueStmtNode(
+                    newSpan ?? this.span,
+                );
             }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -52,11 +45,12 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, leftExpr: ExprNode): TryNode {
-                return new TryNode(span, leftExpr);
+            static create(span: Span): ContinueStmtNode {
+                return new ContinueStmtNode(span);
             }
 
         // └────────────────────────────────────────────────────────────────────┘
+
     }
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝

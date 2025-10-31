@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Block' as const;
+            public kind = 'block' as const;
             public level = 3;
 
             constructor(

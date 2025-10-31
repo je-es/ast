@@ -21,7 +21,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Match' as const;
+            public kind = 'match' as const;
             public level = 3;
 
             constructor(

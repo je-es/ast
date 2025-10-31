@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Range' as const;
+            public kind = 'range' as const;
             public level = 3;
 
             constructor(

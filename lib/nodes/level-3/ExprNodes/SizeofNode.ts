@@ -20,7 +20,7 @@
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
-            public kind = 'Sizeof';
+            public kind = 'sizeof';
 
             constructor(
                 public span         : Span,

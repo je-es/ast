@@ -1,4 +1,4 @@
-// TryNode.ts
+// WhileStmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -8,6 +8,7 @@
 
     import { Span, Node }   from '../../node';
     import { ExprNode }     from '../../level-2/ExprNode';
+    import { StmtNode }     from '../../level-1/StmtNode';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -15,19 +16,18 @@
 
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class TryNode extends Node  {
+    export class WhileStmtNode extends Node {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'try' as const;
             public level = 3;
+            public kind = 'while' as const
 
             constructor(
-                public span         : Span,
-                public expr         : ExprNode,
-            ) {
-                super();
-            }
+                public span : Span,
+                public expr : ExprNode,
+                public stmt : StmtNode,
+            ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
 
@@ -35,16 +35,15 @@
         // ┌──────────────────────────────── NODE ──────────────────────────────┐
 
             public getChildrenNodes(): Node[] {
-                const children: Node[] = [];
-
-                children.push(this.expr);
-
-                return children;
+                return [this.expr, this.stmt];
             }
 
-            clone(newSpan?: Span): TryNode {
-                const cloned = new TryNode(newSpan || this.span, this.expr);
-                return cloned;
+            clone(newSpan?: Span): WhileStmtNode {
+                return new WhileStmtNode(
+                    newSpan ?? this.span,
+                    this.expr,
+                    this.stmt
+                );
             }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -52,11 +51,12 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, leftExpr: ExprNode): TryNode {
-                return new TryNode(span, leftExpr);
+            static create(span: Span, expr: ExprNode, stmt: StmtNode): WhileStmtNode {
+                return new WhileStmtNode(span, expr, stmt);
             }
 
         // └────────────────────────────────────────────────────────────────────┘
+
     }
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝

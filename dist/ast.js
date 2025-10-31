@@ -39,26 +39,29 @@ __export(ast_exports, {
   AsNode: () => AsNode,
   BinaryNode: () => BinaryNode,
   BlockStmtNode: () => BlockStmtNode,
+  BreakStmtNode: () => BreakStmtNode,
   CallNode: () => CallNode,
   CaseNode: () => CaseNode,
   CatchNode: () => CatchNode,
   ConditionalNode: () => ConditionalNode,
-  ControlFlowStmtNode: () => ControlFlowStmtNode,
+  ContinueStmtNode: () => ContinueStmtNode,
   DefStmtNode: () => DefStmtNode,
   DefaultNode: () => DefaultNode,
+  DeferStmtNode: () => DeferStmtNode,
+  DoStmtNode: () => DoStmtNode,
   EnumTypeNode: () => EnumTypeNode,
   EnumVariantNode: () => EnumVariantNode,
   ErrsetTypeNode: () => ErrsetTypeNode,
   ExprNode: () => ExprNode,
   ExprTupleNode: () => ExprTupleNode,
   FieldNode: () => FieldNode,
+  ForStmtNode: () => ForStmtNode,
   FuncStmtNode: () => FuncStmtNode,
   FunctionTypeNode: () => FunctionTypeNode,
   IdentNode: () => IdentNode,
   IfNode: () => IfNode,
   LetStmtNode: () => LetStmtNode,
   LiteralNode: () => LiteralNode,
-  LoopStmtNode: () => LoopStmtNode,
   MatchNode: () => MatchNode,
   MemberAccessNode: () => MemberAccessNode,
   Module: () => Module,
@@ -76,17 +79,20 @@ __export(ast_exports, {
   Program: () => Program,
   PropNode: () => PropNode,
   RangeNode: () => RangeNode,
+  ReturnStmtNode: () => ReturnStmtNode,
   SizeofNode: () => SizeofNode,
   StmtNode: () => StmtNode,
   StructMemberNode: () => StructMemberNode,
   StructTypeNode: () => StructTypeNode,
   TestStmtNode: () => TestStmtNode,
+  ThrowStmtNode: () => ThrowStmtNode,
   TryNode: () => TryNode,
   TupleTypeNode: () => TupleTypeNode,
   TypeNode: () => TypeNode,
   TypeofNode: () => TypeofNode,
   UnionTypeNode: () => UnionTypeNode,
-  UseStmtNode: () => UseStmtNode
+  UseStmtNode: () => UseStmtNode,
+  WhileStmtNode: () => WhileStmtNode
 });
 module.exports = __toCommonJS(ast_exports);
 
@@ -128,7 +134,7 @@ var Module = class _Module {
   }
   findFunction(name) {
     for (const stmt of this.statements) {
-      if (stmt.is("Func") && stmt.getFunc().ident.name === name) {
+      if (stmt.is("func") && stmt.getFunc().ident.name === name) {
         return stmt.getFunc();
       }
     }
@@ -212,7 +218,7 @@ var Module = class _Module {
   getPublicStatements() {
     const arr = [];
     for (const stmt of this.statements) {
-      if (stmt.is("Let") && stmt.getLet().field.visibility.kind !== "Private" || stmt.is("Def") && stmt.getDef().visibility.kind !== "Private" || stmt.is("Func") && stmt.getFunc().visibility.kind !== "Private") {
+      if (stmt.is("let") && stmt.getLet().field.visibility.kind !== "Private" || stmt.is("def") && stmt.getDef().visibility.kind !== "Private" || stmt.is("func") && stmt.getFunc().visibility.kind !== "Private") {
         arr.push(stmt);
       }
     }
@@ -555,7 +561,7 @@ var BlockStmtNode = class _BlockStmtNode extends Node {
     this.span = span;
     this.stmts = stmts;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Block";
+    this.kind = "block";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -779,16 +785,16 @@ var DefStmtNode = class _DefStmtNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
 };
 
-// lib/nodes/level-3/StmtNodes/LoopStmtNode.ts
-var LoopStmtNode = class _LoopStmtNode extends Node {
-  constructor(span, kind, expr, stmt) {
+// lib/nodes/level-3/StmtNodes/ForStmtNode.ts
+var ForStmtNode = class _ForStmtNode extends Node {
+  constructor(span, expr, stmt) {
     super();
     this.span = span;
-    this.kind = kind;
     this.expr = expr;
     this.stmt = stmt;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 3;
+    this.kind = "for";
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
@@ -796,93 +802,78 @@ var LoopStmtNode = class _LoopStmtNode extends Node {
     return [this.expr, this.stmt];
   }
   clone(newSpan) {
-    return new _LoopStmtNode(
+    return new _ForStmtNode(
       newSpan != null ? newSpan : this.span,
-      this.kind,
       this.expr,
       this.stmt
     );
   }
   // └────────────────────────────────────────────────────────────────────┘
-  // ┌──────────────────────────────── IS_X ──────────────────────────────┐
-  isFor() {
-    return this.kind === "For";
-  }
-  isWhile() {
-    return this.kind === "While";
-  }
-  isDo() {
-    return this.kind === "While";
-  }
-  // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static createFor(span, expr, stmt) {
-    return new _LoopStmtNode(span, "For", expr, stmt);
-  }
-  static createWhile(span, expr, stmt) {
-    return new _LoopStmtNode(span, "While", expr, stmt);
-  }
-  static createDo(span, expr, stmt) {
-    return new _LoopStmtNode(span, "Do", expr, stmt);
+  static create(span, expr, stmt) {
+    return new _ForStmtNode(span, expr, stmt);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
 
-// lib/nodes/level-3/StmtNodes/ControlFlowStmtNode.ts
-var ControlFlowStmtNode = class _ControlFlowStmtNode extends Node {
-  constructor(span, kind, value) {
+// lib/nodes/level-3/StmtNodes/WhileStmtNode.ts
+var WhileStmtNode = class _WhileStmtNode extends Node {
+  constructor(span, expr, stmt) {
     super();
     this.span = span;
-    this.kind = kind;
-    this.value = value;
+    this.expr = expr;
+    this.stmt = stmt;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 3;
+    this.kind = "while";
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
   getChildrenNodes() {
-    return this.value ? [this.value] : [];
+    return [this.expr, this.stmt];
   }
   clone(newSpan) {
-    return new _ControlFlowStmtNode(
+    return new _WhileStmtNode(
       newSpan != null ? newSpan : this.span,
-      this.kind,
-      this.value
+      this.expr,
+      this.stmt
     );
   }
   // └────────────────────────────────────────────────────────────────────┘
-  // ┌──────────────────────────────── IS_X ──────────────────────────────┐
-  isReturn() {
-    return this.kind === "return";
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span, expr, stmt) {
+    return new _WhileStmtNode(span, expr, stmt);
   }
-  isDefer() {
-    return this.kind === "defer";
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
+// lib/nodes/level-3/StmtNodes/DoStmtNode.ts
+var DoStmtNode = class _DoStmtNode extends Node {
+  constructor(span, expr, stmt) {
+    super();
+    this.span = span;
+    this.expr = expr;
+    this.stmt = stmt;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "do";
   }
-  isThrow() {
-    return this.kind === "throw";
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return [this.expr, this.stmt];
   }
-  isBreak() {
-    return this.kind === "break";
-  }
-  isContinue() {
-    return this.kind === "continue";
+  clone(newSpan) {
+    return new _DoStmtNode(
+      newSpan != null ? newSpan : this.span,
+      this.expr,
+      this.stmt
+    );
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static asReturn(span, value) {
-    return new _ControlFlowStmtNode(span, "return", value);
-  }
-  static asDefer(span, value) {
-    return new _ControlFlowStmtNode(span, "defer", value);
-  }
-  static asThrow(span, value) {
-    return new _ControlFlowStmtNode(span, "throw", value);
-  }
-  static asBreak(span) {
-    return new _ControlFlowStmtNode(span, "break");
-  }
-  static asContinue(span) {
-    return new _ControlFlowStmtNode(span, "continue");
+  static create(span, expr, stmt) {
+    return new _DoStmtNode(span, expr, stmt);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -919,6 +910,147 @@ var TestStmtNode = class _TestStmtNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
 };
 
+// lib/nodes/level-3/StmtNodes/BreakStmtNode.ts
+var BreakStmtNode = class _BreakStmtNode extends Node {
+  constructor(span) {
+    super();
+    this.span = span;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "break";
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return [];
+  }
+  clone(newSpan) {
+    return new _BreakStmtNode(
+      newSpan != null ? newSpan : this.span
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span) {
+    return new _BreakStmtNode(span);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
+// lib/nodes/level-3/StmtNodes/ContinueStmtNode.ts
+var ContinueStmtNode = class _ContinueStmtNode extends Node {
+  constructor(span) {
+    super();
+    this.span = span;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "continue";
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return [];
+  }
+  clone(newSpan) {
+    return new _ContinueStmtNode(
+      newSpan != null ? newSpan : this.span
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span) {
+    return new _ContinueStmtNode(span);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
+// lib/nodes/level-3/StmtNodes/ReturnStmtNode.ts
+var ReturnStmtNode = class _ReturnStmtNode extends Node {
+  constructor(span, expr) {
+    super();
+    this.span = span;
+    this.expr = expr;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "return";
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return this.expr ? [this.expr] : [];
+  }
+  clone(newSpan) {
+    return new _ReturnStmtNode(
+      newSpan != null ? newSpan : this.span,
+      this.expr
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span, expr) {
+    return new _ReturnStmtNode(span, expr);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
+// lib/nodes/level-3/StmtNodes/DeferStmtNode.ts
+var DeferStmtNode = class _DeferStmtNode extends Node {
+  constructor(span, expr) {
+    super();
+    this.span = span;
+    this.expr = expr;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "defer";
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return [this.expr];
+  }
+  clone(newSpan) {
+    return new _DeferStmtNode(
+      newSpan != null ? newSpan : this.span,
+      this.expr
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span, expr) {
+    return new _DeferStmtNode(span, expr);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
+// lib/nodes/level-3/StmtNodes/ThrowStmtNode.ts
+var ThrowStmtNode = class _ThrowStmtNode extends Node {
+  constructor(span, expr) {
+    super();
+    this.span = span;
+    this.expr = expr;
+    // ┌──────────────────────────────── INIT ──────────────────────────────┐
+    this.level = 3;
+    this.kind = "throw";
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── NODE ──────────────────────────────┐
+  getChildrenNodes() {
+    return [this.expr];
+  }
+  clone(newSpan) {
+    return new _ThrowStmtNode(
+      newSpan != null ? newSpan : this.span,
+      this.expr
+    );
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+  // ┌──────────────────────────────── MAIN ──────────────────────────────┐
+  static create(span, expr) {
+    return new _ThrowStmtNode(span, expr);
+  }
+  // └────────────────────────────────────────────────────────────────────┘
+};
+
 // lib/nodes/level-1/StmtNode.ts
 var StmtNode = class _StmtNode extends Node {
   constructor(kind, span, source) {
@@ -933,9 +1065,9 @@ var StmtNode = class _StmtNode extends Node {
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
   getChildrenNodes() {
     const children = [];
-    if (this.is("Block")) {
+    if (this.is("block")) {
       children.push(...this.getBlock().getChildrenNodes());
-    } else if (this.is("Section")) {
+    } else if (this.is("section")) {
       children.push(...this.getSection().getChildrenNodes());
     } else if (this.source instanceof Node) {
       children.push(this.source);
@@ -948,134 +1080,122 @@ var StmtNode = class _StmtNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── HELP ──────────────────────────────┐
   getExpr() {
-    if (this.is("Expression")) {
+    if (this.is("expression")) {
       return this.source;
     }
     return void 0;
   }
   getBlock() {
-    if (this.is("Block")) {
+    if (this.is("block")) {
       return this.source;
     }
     return void 0;
   }
   getSection() {
-    if (this.is("Section")) {
+    if (this.is("section")) {
       return this.source;
     }
     return void 0;
   }
   getTest() {
-    if (this.is("Test")) {
+    if (this.is("test")) {
       return this.source;
     }
     return void 0;
   }
   getUse() {
-    if (this.is("Use")) {
+    if (this.is("use")) {
       return this.source;
     }
     return void 0;
   }
   getDef() {
-    if (this.is("Def")) {
+    if (this.is("def")) {
       return this.source;
     }
     return void 0;
   }
   getLet() {
-    if (this.is("Let")) {
+    if (this.is("let")) {
       return this.source;
     }
     return void 0;
   }
   getFunc() {
-    if (this.is("Func")) {
-      return this.source;
-    }
-    return void 0;
-  }
-  getLoop() {
-    if (this.is("For") || this.is("While") || this.is("Do")) {
+    if (this.is("func")) {
       return this.source;
     }
     return void 0;
   }
   getFor() {
-    if (this.is("For")) {
+    if (this.is("for")) {
       return this.source;
     }
     return void 0;
   }
   getWhile() {
-    if (this.is("While")) {
+    if (this.is("while")) {
       return this.source;
     }
     return void 0;
   }
   getDo() {
-    if (this.is("Do")) {
-      return this.source;
-    }
-    return void 0;
-  }
-  getCtrlflow() {
-    if (this.is("Return") || this.is("Defer") || this.is("Throw") || this.is("Break") || this.is("Continue")) {
+    if (this.is("do")) {
       return this.source;
     }
     return void 0;
   }
   getReturn() {
-    if (this.is("Return")) {
+    if (this.is("return")) {
       return this.source;
     }
     return void 0;
   }
   getDefer() {
-    if (this.is("Defer")) {
+    if (this.is("defer")) {
       return this.source;
     }
     return void 0;
   }
   getThrow() {
-    if (this.is("Throw")) {
+    if (this.is("throw")) {
       return this.source;
     }
     return void 0;
   }
   getBreak() {
-    if (this.is("Break")) {
+    if (this.is("break")) {
       return this.source;
     }
     return void 0;
   }
   getContinue() {
-    if (this.is("Continue")) {
+    if (this.is("continue")) {
       return this.source;
     }
     return void 0;
   }
   getStmtName() {
     var _a, _b, _c;
-    if (this.is("Use")) {
+    if (this.is("use")) {
       return (_c = (_b = (_a = this.source.alias) == null ? void 0 : _a.name) != null ? _b : this.source.path) != null ? _c : "unknown-use";
-    } else if (this.is("Def")) {
+    } else if (this.is("def")) {
       return this.source.ident.name;
-    } else if (this.is("Let")) {
+    } else if (this.is("let")) {
       return this.source.field.ident.name;
-    } else if (this.is("Func")) {
+    } else if (this.is("func")) {
       return this.source.ident.name;
     }
     return void 0;
   }
   getStmtNameSpan() {
-    if (this.is("Use")) {
+    if (this.is("use")) {
       return this.source.span;
-    } else if (this.is("Def")) {
+    } else if (this.is("def")) {
       return this.source.ident.span;
-    } else if (this.is("Let")) {
+    } else if (this.is("let")) {
       return this.source.field.ident.span;
-    } else if (this.is("Func")) {
+    } else if (this.is("func")) {
       return this.source.ident.span;
     }
     return void 0;
@@ -1086,52 +1206,52 @@ var StmtNode = class _StmtNode extends Node {
     return new _StmtNode(kind, span, data);
   }
   static asExpr(span, expr) {
-    return _StmtNode.create("Expression", span, expr);
+    return _StmtNode.create("expression", span, expr);
   }
   static asBlock(span, stmts) {
-    return _StmtNode.create("Block", span, BlockStmtNode.create(span, stmts));
+    return _StmtNode.create("block", span, BlockStmtNode.create(span, stmts));
   }
   static asSection(span, nameInfo, indent, stmts) {
-    return _StmtNode.create("Section", span, SectionStmtNode.create(span, nameInfo, indent, stmts));
+    return _StmtNode.create("section", span, SectionStmtNode.create(span, nameInfo, indent, stmts));
   }
   static asUse(span, visibility, targetArr, alias, path, pathSpan, documents) {
-    return _StmtNode.create("Use", span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
+    return _StmtNode.create("use", span, UseStmtNode.create(span, visibility, targetArr, alias, path, pathSpan, documents));
   }
   static asDefine(span, visibility, ident, type, documents) {
-    return _StmtNode.create("Def", span, DefStmtNode.create(span, visibility, ident, type, documents));
+    return _StmtNode.create("def", span, DefStmtNode.create(span, visibility, ident, type, documents));
   }
   static asLet(span, visibility, comptime, mutability, ident, type, initializer, documents) {
-    return _StmtNode.create("Let", span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents));
+    return _StmtNode.create("let", span, LetStmtNode.create(span, visibility, comptime, mutability, ident, type, initializer, documents));
   }
   static asFunc(span, visibility, comptime, isInline, ident, parameters, errorType, returnType, body, documents) {
-    return _StmtNode.create("Func", span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents));
+    return _StmtNode.create("func", span, FuncStmtNode.create(span, visibility, comptime, isInline, ident, parameters, body, errorType, returnType, documents));
   }
   static asFor(span, expr, stmt) {
-    return _StmtNode.create("For", span, LoopStmtNode.createFor(span, expr, stmt));
+    return _StmtNode.create("for", span, ForStmtNode.create(span, expr, stmt));
   }
   static asWhile(span, expr, stmt) {
-    return _StmtNode.create("While", span, LoopStmtNode.createWhile(span, expr, stmt));
+    return _StmtNode.create("while", span, WhileStmtNode.create(span, expr, stmt));
   }
   static asDo(span, expr, stmt) {
-    return _StmtNode.create("Do", span, LoopStmtNode.createDo(span, expr, stmt));
+    return _StmtNode.create("do", span, DoStmtNode.create(span, expr, stmt));
   }
-  static asReturn(span, value) {
-    return _StmtNode.create("Return", span, ControlFlowStmtNode.asReturn(span, value));
+  static asReturn(span, expr) {
+    return _StmtNode.create("return", span, ReturnStmtNode.create(span, expr));
   }
-  static asDefer(span, value) {
-    return _StmtNode.create("Defer", span, ControlFlowStmtNode.asDefer(span, value));
+  static asDefer(span, expr) {
+    return _StmtNode.create("defer", span, DeferStmtNode.create(span, expr));
   }
-  static asThrow(span, value) {
-    return _StmtNode.create("Throw", span, ControlFlowStmtNode.asThrow(span, value));
+  static asThrow(span, expr) {
+    return _StmtNode.create("throw", span, ThrowStmtNode.create(span, expr));
   }
   static asBreak(span) {
-    return _StmtNode.create("Break", span, ControlFlowStmtNode.asBreak(span));
+    return _StmtNode.create("break", span, BreakStmtNode.create(span));
   }
   static asContinue(span) {
-    return _StmtNode.create("Continue", span, ControlFlowStmtNode.asContinue(span));
+    return _StmtNode.create("continue", span, ContinueStmtNode.create(span));
   }
   static asTest(span, nameInfo, block, documents) {
-    return _StmtNode.create("Test", span, TestStmtNode.create(span, nameInfo, block, documents));
+    return _StmtNode.create("test", span, TestStmtNode.create(span, nameInfo, block, documents));
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── IS_X ──────────────────────────────┐
@@ -2056,46 +2176,46 @@ var PrimaryNode = class _PrimaryNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
   static create(kind, span, source) {
-    if (kind === "Ident" && !(source instanceof IdentNode)) {
+    if (kind === "ident" && !(source instanceof IdentNode)) {
       throw new Error(`Invalid kind for primary: ${kind}`);
     }
-    if (kind === "Literal" && !(source instanceof LiteralNode)) {
+    if (kind === "literal" && !(source instanceof LiteralNode)) {
       throw new Error(`Invalid kind for primary: ${kind}`);
     }
-    if (kind === "Object" && !(source instanceof ObjectNode)) {
+    if (kind === "object" && !(source instanceof ObjectNode)) {
       throw new Error(`Invalid kind for primary: ${kind}`);
     }
-    if (kind === "Paren" && !(source instanceof ParenNode)) {
+    if (kind === "paren" && !(source instanceof ParenNode)) {
       throw new Error(`Invalid kind for primary: ${kind}`);
     }
-    if (kind === "Tuple" && !(source instanceof ExprTupleNode)) {
+    if (kind === "tuple" && !(source instanceof ExprTupleNode)) {
       throw new Error(`Invalid kind for primary: ${kind}`);
     }
-    if (kind === "Type" && !(source instanceof TypeNode)) {
+    if (kind === "type" && !(source instanceof TypeNode)) {
       throw new Error(`Invalid kind for primary: ${kind}`);
     }
     return new _PrimaryNode(kind, span, source);
   }
   static asIdent(span, name, builtin = false) {
-    return this.create("Ident", span, IdentNode.create(span, name, builtin));
+    return this.create("ident", span, IdentNode.create(span, name, builtin));
   }
   static asLiteral(kind, span, value) {
-    return this.create("Literal", span, LiteralNode.create(kind, span, value));
+    return this.create("literal", span, LiteralNode.create(kind, span, value));
   }
   static asParen(span, source) {
-    return this.create("Paren", span, ParenNode.create(span, source));
+    return this.create("paren", span, ParenNode.create(span, source));
   }
   static asObject(span, props, ident) {
-    return this.create("Object", span, ObjectNode.create(span, props, ident));
+    return this.create("object", span, ObjectNode.create(span, props, ident));
   }
   static asTuple(span, exprs) {
-    return this.create("Tuple", span, ExprTupleNode.create(span, exprs));
+    return this.create("tuple", span, ExprTupleNode.create(span, exprs));
   }
   static asType(span, type) {
-    return this.create("Type", span, type);
+    return this.create("type", span, type);
   }
   static asUnreachable(span) {
-    return this.create("Unreachable", span);
+    return this.create("unreachable", span);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -2242,24 +2362,24 @@ var PostfixNode = class _PostfixNode extends Node {
     return this.expr;
   }
   getAsExprNode() {
-    if (this.is("Increment") || this.is("Decrement") || this.is("Dereference")) {
+    if (this.is("increment") || this.is("decrement") || this.is("dereference")) {
       return this.expr;
     }
     return void 0;
   }
   toString() {
     switch (this.kind) {
-      case "Increment":
+      case "increment":
         return `${this.expr.toString()}++`;
-      case "Decrement":
+      case "decrement":
         return `${this.expr.toString()}--`;
-      case "Dereference":
+      case "dereference":
         return `*${this.expr.toString()}`;
-      case "MemberAccess":
+      case "memberAccess":
         return this.getMemberAccess().toString();
-      case "ArrayAccess":
+      case "arrayAccess":
         return this.getArrayAccess().toString();
-      case "Call":
+      case "call":
         return this.getCall().toString();
       default:
         return `${this.expr.toString()}/* unknown postfix */`;
@@ -2271,26 +2391,26 @@ var PostfixNode = class _PostfixNode extends Node {
     return new _PostfixNode(kind, span, expr);
   }
   static asIncrement(span, base) {
-    return _PostfixNode.create("Increment", span, base);
+    return _PostfixNode.create("increment", span, base);
   }
   static asDecrement(span, base) {
-    return _PostfixNode.create("Decrement", span, base);
+    return _PostfixNode.create("decrement", span, base);
   }
   static asDereference(span, base) {
-    return _PostfixNode.create("Dereference", span, base);
+    return _PostfixNode.create("dereference", span, base);
   }
   static asMember(span, base, target, optional = false) {
     const memberExpr = MemberAccessNode.create(span, base, target, optional);
-    return _PostfixNode.create("MemberAccess", span, memberExpr);
+    return _PostfixNode.create("memberAccess", span, memberExpr);
   }
   static asArrayAccess(span, base, index) {
     const arrayExpr = ArrayAccessNode.create(span, base, index);
-    const node = _PostfixNode.create("ArrayAccess", span, arrayExpr);
+    const node = _PostfixNode.create("arrayAccess", span, arrayExpr);
     return node;
   }
   static asCall(span, base, args) {
     const callExpr = CallNode.create(span, base, args);
-    return _PostfixNode.create("Call", span, callExpr);
+    return _PostfixNode.create("call", span, callExpr);
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -2331,31 +2451,31 @@ var PrefixNode = class _PrefixNode extends Node {
 
 // lib/nodes/level-3/ExprNodes/BinaryNode.ts
 var op_table = {
-  "**": "Power",
-  "*": "Multiplicative",
-  "/": "Multiplicative",
-  "%": "Multiplicative",
-  "+": "Additive",
-  "-": "Additive",
-  "<<": "Shift",
-  ">>": "Shift",
-  "<": "Relational",
-  "<=": "Relational",
-  ">": "Relational",
-  ">=": "Relational",
-  "==": "Equality",
-  "!=": "Equality",
-  "&": "BitwiseAnd",
-  "^": "BitwiseXor",
-  "|": "BitwiseOr",
-  "and": "LogicalAnd",
-  "or": "LogicalOr",
-  "=": "Assignment",
-  "+=": "Assignment",
-  "-=": "Assignment",
-  "*=": "Assignment",
-  "/=": "Assignment",
-  "%=": "Assignment"
+  "**": "power",
+  "*": "multiplicative",
+  "/": "multiplicative",
+  "%": "multiplicative",
+  "+": "additive",
+  "-": "additive",
+  "<<": "shift",
+  ">>": "shift",
+  "<": "relational",
+  "<=": "relational",
+  ">": "relational",
+  ">=": "relational",
+  "==": "equality",
+  "!=": "equality",
+  "&": "bitwiseAnd",
+  "^": "bitwiseXor",
+  "|": "bitwiseOr",
+  "and": "logicalAnd",
+  "or": "logicalOr",
+  "=": "assignment",
+  "+=": "assignment",
+  "-=": "assignment",
+  "*=": "assignment",
+  "/=": "assignment",
+  "%=": "assignment"
 };
 var BinaryNode = class _BinaryNode extends Node {
   constructor(kind, span, left, operator, right) {
@@ -2406,7 +2526,7 @@ var ConditionalNode = class _ConditionalNode extends Node {
     this.trueExpr = trueExpr;
     this.falseExpr = falseExpr;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Conditional";
+    this.kind = "conditional";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2439,7 +2559,7 @@ var IfNode = class _IfNode extends Node {
     this.thenStmt = thenStmt;
     this.elseStmt = elseStmt;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "If";
+    this.kind = "if";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2474,7 +2594,7 @@ var MatchNode = class _MatchNode extends Node {
     this.cases = cases;
     this.defCase = defCase;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Match";
+    this.kind = "match";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2511,7 +2631,7 @@ var CatchNode = class _CatchNode extends Node {
     this.tag = tag;
     this.rightStmt = rightStmt;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Catch";
+    this.kind = "catch";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2544,7 +2664,7 @@ var TryNode = class _TryNode extends Node {
     this.span = span;
     this.expr = expr;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Try";
+    this.kind = "try";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2575,7 +2695,7 @@ var RangeNode = class _RangeNode extends Node {
     this.rangeType = rangeType;
     this.rightExpr = rightExpr;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
-    this.kind = "Range";
+    this.kind = "range";
     this.level = 3;
   }
   // └────────────────────────────────────────────────────────────────────┘
@@ -2611,7 +2731,7 @@ var OrelseNode = class _OrelseNode extends Node {
     this.right = right;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 3;
-    this.kind = "Orelse";
+    this.kind = "orelse";
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
@@ -2642,7 +2762,7 @@ var AsNode = class _AsNode extends Node {
     this.type = type;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 3;
-    this.kind = "As";
+    this.kind = "as";
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
@@ -2771,7 +2891,7 @@ var TypeofNode = class _TypeofNode extends Node {
     this.expr = expr;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 3;
-    this.kind = "Typeof";
+    this.kind = "typeof";
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
@@ -2800,7 +2920,7 @@ var SizeofNode = class _SizeofNode extends Node {
     this.expr = expr;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 3;
-    this.kind = "Sizeof";
+    this.kind = "sizeof";
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── NODE ──────────────────────────────┐
@@ -2843,64 +2963,64 @@ var ExprNode = class _ExprNode extends Node {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── HELP ──────────────────────────────┐
   getPrimary() {
-    return this.is("Primary") ? this.data : void 0;
+    return this.is("primary") ? this.data : void 0;
   }
   getPostfix() {
-    return this.is("Postfix") ? this.data : void 0;
+    return this.is("postfix") ? this.data : void 0;
   }
   getPrefix() {
-    return this.is("Prefix") ? this.data : void 0;
+    return this.is("prefix") ? this.data : void 0;
   }
   getBinary() {
-    return this.is("Binary") ? this.data : void 0;
+    return this.is("binary") ? this.data : void 0;
   }
   getConditional() {
-    return this.is("Cond") ? this.data : void 0;
+    return this.is("cond") ? this.data : void 0;
   }
   getIf() {
-    return this.is("If") ? this.data : void 0;
+    return this.is("if") ? this.data : void 0;
   }
   getMatch() {
-    return this.is("Match") ? this.data : void 0;
+    return this.is("match") ? this.data : void 0;
   }
   getCatch() {
-    return this.is("Catch") ? this.data : void 0;
+    return this.is("catch") ? this.data : void 0;
   }
   getTry() {
-    return this.is("Try") ? this.data : void 0;
+    return this.is("try") ? this.data : void 0;
   }
   getRange() {
-    return this.is("Range") ? this.data : void 0;
+    return this.is("range") ? this.data : void 0;
   }
   getOrelse() {
-    return this.is("Orelse") ? this.data : void 0;
+    return this.is("orelse") ? this.data : void 0;
   }
   getAs() {
-    return this.is("As") ? this.data : void 0;
+    return this.is("as") ? this.data : void 0;
   }
   getTypeof() {
-    return this.is("Typeof") ? this.data : void 0;
+    return this.is("typeof") ? this.data : void 0;
   }
   getSizeof() {
-    return this.is("Sizeof") ? this.data : void 0;
+    return this.is("sizeof") ? this.data : void 0;
   }
   getLiteral() {
-    return this.is("Primary") && this.getPrimary().is("Literal") ? this.getPrimary().getLiteral() : void 0;
+    return this.is("primary") && this.getPrimary().is("literal") ? this.getPrimary().getLiteral() : void 0;
   }
   getIdent() {
-    return this.is("Primary") && this.getPrimary().is("Ident") ? this.getPrimary().getIdent() : void 0;
+    return this.is("primary") && this.getPrimary().is("ident") ? this.getPrimary().getIdent() : void 0;
   }
   getParen() {
-    return this.is("Primary") && this.getPrimary().is("Paren") ? this.getPrimary().getParen() : void 0;
+    return this.is("primary") && this.getPrimary().is("paren") ? this.getPrimary().getParen() : void 0;
   }
   getObject() {
-    return this.is("Primary") && this.getPrimary().is("Object") ? this.getPrimary().getObject() : void 0;
+    return this.is("primary") && this.getPrimary().is("object") ? this.getPrimary().getObject() : void 0;
   }
   getTuple() {
-    return this.is("Primary") && this.getPrimary().is("Tuple") ? this.getPrimary().getTuple() : void 0;
+    return this.is("primary") && this.getPrimary().is("tuple") ? this.getPrimary().getTuple() : void 0;
   }
   getType() {
-    return this.is("Primary") && this.getPrimary().is("Type") ? this.getPrimary().getType() : void 0;
+    return this.is("primary") && this.getPrimary().is("type") ? this.getPrimary().getType() : void 0;
   }
   is(kind) {
     return this.kind === kind;
@@ -2909,52 +3029,52 @@ var ExprNode = class _ExprNode extends Node {
     return this.is(kind) || this.isParen() && this.getParen().source.isOrEndWith(kind) || false;
   }
   isIdent() {
-    return this.is("Primary") && this.getPrimary().is("Ident");
+    return this.is("primary") && this.getPrimary().is("ident");
   }
   isLiteral() {
-    return this.is("Primary") && this.getPrimary().is("Literal");
+    return this.is("primary") && this.getPrimary().is("literal");
   }
   isUnreachable() {
-    return this.is("Primary") && this.getPrimary().is("Unreachable");
+    return this.is("primary") && this.getPrimary().is("unreachable");
   }
   isObject() {
-    return this.is("Primary") && this.getPrimary().is("Object");
+    return this.is("primary") && this.getPrimary().is("object");
   }
   isParen() {
-    return this.is("Primary") && this.getPrimary().is("Paren");
+    return this.is("primary") && this.getPrimary().is("paren");
   }
   isTuple() {
-    return this.is("Primary") && this.getPrimary().is("Tuple");
+    return this.is("primary") && this.getPrimary().is("tuple");
   }
   isType() {
-    return this.is("Primary") && this.getPrimary().is("Type");
+    return this.is("primary") && this.getPrimary().is("type");
   }
   isMemberAccess() {
-    return this.is("Postfix") && this.getPostfix().is("MemberAccess");
+    return this.is("postfix") && this.getPostfix().is("memberAccess");
   }
   isArrayAccess() {
-    return this.is("Postfix") && this.getPostfix().is("ArrayAccess");
+    return this.is("postfix") && this.getPostfix().is("arrayAccess");
   }
   isCall() {
-    return this.is("Postfix") && this.getPostfix().is("Call");
+    return this.is("postfix") && this.getPostfix().is("call");
   }
   isOrelse() {
-    return this.is("Orelse");
+    return this.is("orelse");
   }
   isAs() {
-    return this.is("As");
+    return this.is("as");
   }
   isTypeof() {
-    return this.is("Typeof");
+    return this.is("typeof");
   }
   isSizeof() {
-    return this.is("Sizeof");
+    return this.is("sizeof");
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
   // ────────────────────────── Primary ──────────────────────────
   static asPrimary(span, source) {
-    return new _ExprNode("Primary", span, source);
+    return new _ExprNode("primary", span, source);
   }
   static asLiteral(span, kind, value) {
     return _ExprNode.asPrimary(span || DEF_SPAN, PrimaryNode.asLiteral(kind, span, value));
@@ -3003,7 +3123,7 @@ var ExprNode = class _ExprNode extends Node {
   }
   // ────────────────────────── Postfix ──────────────────────────
   static asPostfix(span, source) {
-    return new _ExprNode("Postfix", span, source);
+    return new _ExprNode("postfix", span, source);
   }
   static asPostIncrement(span, base) {
     return _ExprNode.asPostfix(span || DEF_SPAN, PostfixNode.asIncrement(span || DEF_SPAN, base));
@@ -3025,62 +3145,62 @@ var ExprNode = class _ExprNode extends Node {
   }
   // ────────────────────────── Prefix ──────────────────────────
   static asPrefix(span, source) {
-    return new _ExprNode("Prefix", span, source);
+    return new _ExprNode("prefix", span, source);
   }
   static asPreIncrement(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("Increment", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("increment", span, base));
   }
   static asPreDecrement(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("Decrement", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("decrement", span, base));
   }
   static asReference(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("Reference", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("reference", span, base));
   }
   static asUnaryMinus(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("UnaryMinus", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("unaryMinus", span, base));
   }
   static asUnaryPlus(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("UnaryPlus", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("unaryPlus", span, base));
   }
   static asLogicalNot(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("LogicalNot", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("logicalNot", span, base));
   }
   static asxBitwiseNot(span, base) {
-    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("BitwiseNot", span, base));
+    return _ExprNode.asPrefix(span || DEF_SPAN, PrefixNode.create("bitwiseNot", span, base));
   }
   // ────────────────────────── Rest ──────────────────────────
   static asBinary(span, left, operator, right) {
-    return new _ExprNode("Binary", span, BinaryNode.create(span || DEF_SPAN, left, operator, right));
+    return new _ExprNode("binary", span, BinaryNode.create(span || DEF_SPAN, left, operator, right));
   }
   static asConditional(span, condExpr, trueExpr, falseExpr) {
-    return new _ExprNode("Cond", span, ConditionalNode.create(span || DEF_SPAN, condExpr, trueExpr, falseExpr));
+    return new _ExprNode("cond", span, ConditionalNode.create(span || DEF_SPAN, condExpr, trueExpr, falseExpr));
   }
   static asIf(span, condExpr, thenStmt, elseStmt) {
-    return new _ExprNode("If", span, IfNode.create(span || DEF_SPAN, condExpr, thenStmt, elseStmt));
+    return new _ExprNode("if", span, IfNode.create(span || DEF_SPAN, condExpr, thenStmt, elseStmt));
   }
   static asMatch(span, condExpr, cases, defCase) {
-    return new _ExprNode("Match", span, MatchNode.create(span || DEF_SPAN, condExpr, cases, defCase));
+    return new _ExprNode("match", span, MatchNode.create(span || DEF_SPAN, condExpr, cases, defCase));
   }
   static asCatch(span, leftExpr, tag, rightStmt) {
-    return new _ExprNode("Catch", span, CatchNode.create(span || DEF_SPAN, leftExpr, tag, rightStmt));
+    return new _ExprNode("catch", span, CatchNode.create(span || DEF_SPAN, leftExpr, tag, rightStmt));
   }
   static asTry(span, expr) {
-    return new _ExprNode("Try", span, TryNode.create(span || DEF_SPAN, expr));
+    return new _ExprNode("try", span, TryNode.create(span || DEF_SPAN, expr));
   }
   static asRange(span, leftExpr, rangeType, rightExpr) {
-    return new _ExprNode("Range", span, RangeNode.create(span || DEF_SPAN, leftExpr, rangeType, rightExpr));
+    return new _ExprNode("range", span, RangeNode.create(span || DEF_SPAN, leftExpr, rangeType, rightExpr));
   }
   static asOrelse(span, left, right) {
-    return new _ExprNode("Orelse", span, OrelseNode.create(span || DEF_SPAN, left, right));
+    return new _ExprNode("orelse", span, OrelseNode.create(span || DEF_SPAN, left, right));
   }
   static asAs(span, base, type) {
-    return new _ExprNode("As", span, AsNode.create(span || DEF_SPAN, base, type));
+    return new _ExprNode("as", span, AsNode.create(span || DEF_SPAN, base, type));
   }
   static asTypeof(span, type) {
-    return new _ExprNode("Typeof", span, TypeofNode.create(span || DEF_SPAN, type));
+    return new _ExprNode("typeof", span, TypeofNode.create(span || DEF_SPAN, type));
   }
   static asSizeof(span, type) {
-    return new _ExprNode("Sizeof", span, SizeofNode.create(span || DEF_SPAN, type));
+    return new _ExprNode("sizeof", span, SizeofNode.create(span || DEF_SPAN, type));
   }
   // └────────────────────────────────────────────────────────────────────┘
 };
@@ -3269,26 +3389,29 @@ var StructMemberNode = class _StructMemberNode extends Node {
   AsNode,
   BinaryNode,
   BlockStmtNode,
+  BreakStmtNode,
   CallNode,
   CaseNode,
   CatchNode,
   ConditionalNode,
-  ControlFlowStmtNode,
+  ContinueStmtNode,
   DefStmtNode,
   DefaultNode,
+  DeferStmtNode,
+  DoStmtNode,
   EnumTypeNode,
   EnumVariantNode,
   ErrsetTypeNode,
   ExprNode,
   ExprTupleNode,
   FieldNode,
+  ForStmtNode,
   FuncStmtNode,
   FunctionTypeNode,
   IdentNode,
   IfNode,
   LetStmtNode,
   LiteralNode,
-  LoopStmtNode,
   MatchNode,
   MemberAccessNode,
   Module,
@@ -3306,16 +3429,19 @@ var StructMemberNode = class _StructMemberNode extends Node {
   Program,
   PropNode,
   RangeNode,
+  ReturnStmtNode,
   SizeofNode,
   StmtNode,
   StructMemberNode,
   StructTypeNode,
   TestStmtNode,
+  ThrowStmtNode,
   TryNode,
   TupleTypeNode,
   TypeNode,
   TypeofNode,
   UnionTypeNode,
-  UseStmtNode
+  UseStmtNode,
+  WhileStmtNode
 });
 //# sourceMappingURL=ast.js.map

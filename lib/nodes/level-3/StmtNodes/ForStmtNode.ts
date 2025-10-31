@@ -1,4 +1,4 @@
-// LoopStmtNode.ts
+// ForStmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -14,27 +14,19 @@
 
 
 
-// ╔════════════════════════════════════════ TYPE ════════════════════════════════════════╗
-
-    export type LoopKind = 'For' | 'While' | 'Do';
-
-// ╚══════════════════════════════════════════════════════════════════════════════════════╝
-
-
-
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class LoopStmtNode extends Node {
+    export class ForStmtNode extends Node {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
+            public kind = 'for' as const
 
             constructor(
-                public span         : Span,
-                public kind         : LoopKind,
-                public expr         : ExprNode,
-                public stmt         : StmtNode,
+                public span : Span,
+                public expr : ExprNode,
+                public stmt : StmtNode,
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -46,10 +38,9 @@
                 return [this.expr, this.stmt];
             }
 
-            clone(newSpan?: Span): LoopStmtNode {
-                return new LoopStmtNode(
+            clone(newSpan?: Span): ForStmtNode {
+                return new ForStmtNode(
                     newSpan ?? this.span,
-                    this.kind,
                     this.expr,
                     this.stmt
                 );
@@ -58,35 +49,10 @@
         // └────────────────────────────────────────────────────────────────────┘
 
 
-        // ┌──────────────────────────────── IS_X ──────────────────────────────┐
-
-            isFor(): boolean {
-                return this.kind === 'For';
-            }
-
-            isWhile(): boolean {
-                return this.kind === 'While';
-            }
-
-            isDo(): boolean {
-                return this.kind === 'While';
-            }
-
-        // └────────────────────────────────────────────────────────────────────┘
-
-
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static createFor(span: Span, expr: ExprNode, stmt: StmtNode): LoopStmtNode {
-                return new LoopStmtNode(span, 'For', expr, stmt);
-            }
-
-            static createWhile(span: Span, expr: ExprNode, stmt: StmtNode): LoopStmtNode {
-                return new LoopStmtNode(span, 'While', expr, stmt);
-            }
-
-            static createDo(span: Span, expr: ExprNode, stmt: StmtNode): LoopStmtNode {
-                return new LoopStmtNode(span, 'Do', expr, stmt);
+            static create(span: Span, expr: ExprNode, stmt: StmtNode): ForStmtNode {
+                return new ForStmtNode(span, expr, stmt);
             }
 
         // └────────────────────────────────────────────────────────────────────┘

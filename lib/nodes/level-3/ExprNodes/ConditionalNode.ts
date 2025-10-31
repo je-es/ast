@@ -19,7 +19,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Conditional' as const;
+            public kind = 'conditional' as const;
             public level = 3;
 
             constructor(

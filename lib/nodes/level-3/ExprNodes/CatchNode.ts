@@ -20,7 +20,7 @@
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'Catch' as const;
+            public kind = 'catch' as const;
             public level = 3;
 
             constructor(

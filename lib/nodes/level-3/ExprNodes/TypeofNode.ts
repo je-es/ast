@@ -20,7 +20,7 @@
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
-            public kind = 'Typeof';
+            public kind = 'typeof';
 
             constructor(
                 public span         : Span,

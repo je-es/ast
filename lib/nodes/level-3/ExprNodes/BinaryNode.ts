@@ -16,45 +16,45 @@
 // ╔════════════════════════════════════════ INIT ════════════════════════════════════════╗
 
     export type BinaryKind =
-    | 'Unset'         | 'Power'           | 'Additive'    | 'Multiplicative'
-    | 'Shift'         | 'Relational'      | 'Equality'    | 'Bitwise'
-    | 'Logical'       | 'BitwiseAnd'      | 'BitwiseOr'   | 'BitwiseXor'
-    | 'LogicalAnd'    | 'LogicalOr'       | 'Conditional' | 'Assignment';
+    | 'unset'         | 'power'           | 'additive'    | 'multiplicative'
+    | 'shift'         | 'relational'      | 'equality'    | 'bitwise'
+    | 'logical'       | 'bitwiseAnd'      | 'bitwiseOr'   | 'bitwiseXor'
+    | 'logicalAnd'    | 'logicalOr'       | 'conditional' | 'assignment';
 
     const op_table: Record<string, BinaryKind> = {
-        '**': 'Power',
+        '**': 'power',
 
-        '*' : 'Multiplicative',
-        '/' : 'Multiplicative',
-        '%' : 'Multiplicative',
+        '*' : 'multiplicative',
+        '/' : 'multiplicative',
+        '%' : 'multiplicative',
 
-        '+' : 'Additive',
-        '-' : 'Additive',
+        '+' : 'additive',
+        '-' : 'additive',
 
-        '<<': 'Shift',
-        '>>': 'Shift',
+        '<<': 'shift',
+        '>>': 'shift',
 
-        '<' : 'Relational',
-        '<=': 'Relational',
-        '>' : 'Relational',
-        '>=': 'Relational',
+        '<' : 'relational',
+        '<=': 'relational',
+        '>' : 'relational',
+        '>=': 'relational',
 
-        '==': 'Equality',
-        '!=': 'Equality',
+        '==': 'equality',
+        '!=': 'equality',
 
-        '&' : 'BitwiseAnd',
-        '^' : 'BitwiseXor',
-        '|' : 'BitwiseOr',
+        '&' : 'bitwiseAnd',
+        '^' : 'bitwiseXor',
+        '|' : 'bitwiseOr',
 
-        'and': 'LogicalAnd',
-        'or' : 'LogicalOr',
+        'and': 'logicalAnd',
+        'or' : 'logicalOr',
 
-        '=' : 'Assignment',
-        '+=': 'Assignment',
-        '-=': 'Assignment',
-        '*=': 'Assignment',
-        '/=': 'Assignment',
-        '%=': 'Assignment'
+        '=' : 'assignment',
+        '+=': 'assignment',
+        '-=': 'assignment',
+        '*=': 'assignment',
+        '/=': 'assignment',
+        '%=': 'assignment'
     };
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝

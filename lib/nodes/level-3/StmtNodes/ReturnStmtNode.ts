@@ -1,4 +1,4 @@
-// TryNode.ts
+// ReturnStmtNode.ts
 //
 // Developed with ❤️ by Maysara.
 
@@ -15,19 +15,17 @@
 
 // ╔════════════════════════════════════════ CORE ════════════════════════════════════════╗
 
-    export class TryNode extends Node  {
+    export class ReturnStmtNode extends Node {
 
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
-            public kind = 'try' as const;
             public level = 3;
+            public kind = 'return' as const
 
             constructor(
-                public span         : Span,
-                public expr         : ExprNode,
-            ) {
-                super();
-            }
+                public span : Span,
+                public expr ?: ExprNode
+            ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘
 
@@ -35,16 +33,14 @@
         // ┌──────────────────────────────── NODE ──────────────────────────────┐
 
             public getChildrenNodes(): Node[] {
-                const children: Node[] = [];
-
-                children.push(this.expr);
-
-                return children;
+                return this.expr ? [this.expr] : [];
             }
 
-            clone(newSpan?: Span): TryNode {
-                const cloned = new TryNode(newSpan || this.span, this.expr);
-                return cloned;
+            clone(newSpan?: Span): ReturnStmtNode {
+                return new ReturnStmtNode(
+                    newSpan ?? this.span,
+                    this.expr
+                );
             }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -52,11 +48,12 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(span: Span, leftExpr: ExprNode): TryNode {
-                return new TryNode(span, leftExpr);
+            static create(span: Span, expr?: ExprNode): ReturnStmtNode {
+                return new ReturnStmtNode(span, expr);
             }
 
         // └────────────────────────────────────────────────────────────────────┘
+
     }
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝

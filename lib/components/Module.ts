@@ -67,7 +67,7 @@
 
             findFunction(name: string): FuncStmtNode | undefined {
                 for (const stmt of this.statements) {
-                    if (stmt.is('Func') && stmt.getFunc()!.ident.name === name) {
+                    if (stmt.is('func') && stmt.getFunc()!.ident.name === name) {
                         return stmt.getFunc();
                     }
                 }
@@ -175,9 +175,9 @@
 
                 for (const stmt of this.statements) {
                     if(
-                        (stmt.is('Let')     && stmt.getLet()!.field.visibility.kind !== 'Private') ||
-                        (stmt.is('Def')     && stmt.getDef()!.visibility.kind  !== 'Private') ||
-                        (stmt.is('Func')    && stmt.getFunc()!.visibility.kind !== 'Private')
+                        (stmt.is('let')     && stmt.getLet()!.field.visibility.kind !== 'Private') ||
+                        (stmt.is('def')     && stmt.getDef()!.visibility.kind  !== 'Private') ||
+                        (stmt.is('func')    && stmt.getFunc()!.visibility.kind !== 'Private')
                     ) { arr.push(stmt); }
                 }
 

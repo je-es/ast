@@ -26,10 +26,18 @@
 
     export { BlockStmtNode }        from './nodes/level-3/StmtNodes/BlockStmtNode';
     export { TestStmtNode }         from './nodes/level-3/StmtNodes/TestStmtNode';
-    export { ControlFlowStmtNode }  from './nodes/level-3/StmtNodes/ControlFlowStmtNode';
+
+    export { ReturnStmtNode }       from './nodes/level-3/StmtNodes/ReturnStmtNode';
+    export { ThrowStmtNode }        from './nodes/level-3/StmtNodes/ThrowStmtNode';
+    export { DeferStmtNode }        from './nodes/level-3/StmtNodes/DeferStmtNode';
+    export { BreakStmtNode }        from './nodes/level-3/StmtNodes/BreakStmtNode';
+    export { ContinueStmtNode }     from './nodes/level-3/StmtNodes/ContinueStmtNode';
+
     export { DefStmtNode }          from './nodes/level-3/StmtNodes/DefStmtNode';
     export { FuncStmtNode }         from './nodes/level-3/StmtNodes/FuncStmtNode';
-    export { LoopStmtNode }         from './nodes/level-3/StmtNodes/LoopStmtNode';
+    export { ForStmtNode }          from './nodes/level-3/StmtNodes/ForStmtNode';
+    export { WhileStmtNode }        from './nodes/level-3/StmtNodes/WhileStmtNode';
+    export { DoStmtNode }           from './nodes/level-3/StmtNodes/DoStmtNode';
     export { UseStmtNode }          from './nodes/level-3/StmtNodes/UseStmtNode';
     export { LetStmtNode }          from './nodes/level-3/StmtNodes/LetStmtNode';
 

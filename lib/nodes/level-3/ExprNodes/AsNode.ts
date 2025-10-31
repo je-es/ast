@@ -21,7 +21,7 @@
         // ┌──────────────────────────────── INIT ──────────────────────────────┐
 
             public level = 3;
-            public kind = 'As';
+            public kind = 'as';
 
             constructor(
                 public span         : Span,
