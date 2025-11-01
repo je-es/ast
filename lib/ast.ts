@@ -15,8 +15,13 @@
 
     // Base Nodes
     export { Node}                  from './nodes/node';
-    export type { Span, VisibilityInfo, VisibilityKind, MutabilityInfo, MutabilityKind, ComptimeInfo, ComptimeKind, NameInfo }
-                                    from './nodes/node';
+    export type {
+        Span,
+        VisibilityInfo, VisibilityKind,
+        MutabilityInfo, MutabilityKind,
+        ComptimeInfo, ComptimeKind,
+        NameInfo, ModuleDocsInfo
+    }                               from './nodes/node';
 
     // Common
     export { IdentNode }            from './nodes/level-4/CommonNodes/IdentNode';

@@ -8,6 +8,7 @@
 
     import { StmtNode, StmtKind }   from '../nodes/level-1/StmtNode';
     import { FuncStmtNode }         from '../nodes/level-3/StmtNodes/FuncStmtNode';
+    import { ModuleDocsInfo }       from '../nodes/node';
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝
 
@@ -35,9 +36,8 @@
             constructor(
                 public name         : string,
                 public statements   : StmtNode[],
-                public exports      : string[],
-                public imports      : string[],
                 public metadata     : ModuleMetadata,
+                public docs         : ModuleDocsInfo,
             ) { }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -45,8 +45,8 @@
 
         // ┌──────────────────────────────── MAIN ──────────────────────────────┐
 
-            static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata): Module {
-                return new Module(name, stmts || [], [], [], metadata || {});
+            static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata, docs: ModuleDocsInfo): Module {
+                return new Module(name, stmts, metadata, docs);
             }
 
             validate(): boolean {
@@ -102,9 +102,8 @@
                 return new Module(
                     this.name,
                     newStatements,
-                    [...this.exports],
-                    [...this.imports],
-                    { ...this.metadata }
+                    { ...this.metadata },
+                    { ...this.docs }
                 );
             }
 
@@ -118,9 +117,8 @@
                 return new Module(
                     this.name,
                     newStatements,
-                    [...this.exports],
-                    [...this.imports],
-                    { ...this.metadata }
+                    { ...this.metadata },
+                    { ...this.docs }
                 );
             }
 
@@ -134,9 +132,8 @@
                 return new Module(
                     this.name,
                     newStatements,
-                    [...this.exports],
-                    [...this.imports],
-                    { ...this.metadata }
+                    { ...this.metadata },
+                    { ...this.docs }
                 );
             }
 

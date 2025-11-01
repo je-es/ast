@@ -12,7 +12,7 @@
         A library for building and managing AST.
         <br>
     </p>
-    <img src="https://img.shields.io/badge/Version-0.1.2-black"/>
+    <img src="https://img.shields.io/badge/Version-0.1.3-black"/>
     <a href="https://github.com/je-es"><img src="https://img.shields.io/badge/Part_of-@je--es-black"/></a>
     <a href="https://github.com/kemet-lang"><img src="https://img.shields.io/badge/Built_for-@kemet--lang-black"/></a>
 </div>

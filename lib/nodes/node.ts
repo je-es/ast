@@ -34,6 +34,14 @@
         span            : Span;
     }
 
+    export interface ModuleDocsInfo {
+        name            : string;
+        desc            : string;
+        repo            : string;
+        docs            : string;
+        footer          : string;
+    }
+
     export const DEF_SPAN : Span = { start: -1, end: -1 };
 
 // ╚══════════════════════════════════════════════════════════════════════════════════════╝

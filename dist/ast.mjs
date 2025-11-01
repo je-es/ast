@@ -18,17 +18,16 @@ var __spreadValues = (a, b) => {
 // lib/components/Module.ts
 var Module = class _Module {
   // ┌──────────────────────────────── INIT ──────────────────────────────┐
-  constructor(name, statements, exports, imports, metadata) {
+  constructor(name, statements, metadata, docs) {
     this.name = name;
     this.statements = statements;
-    this.exports = exports;
-    this.imports = imports;
     this.metadata = metadata;
+    this.docs = docs;
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── MAIN ──────────────────────────────┐
-  static create(name, stmts, metadata) {
-    return new _Module(name, stmts || [], [], [], metadata || {});
+  static create(name, stmts, metadata, docs) {
+    return new _Module(name, stmts, metadata, docs);
   }
   validate() {
     try {
@@ -70,9 +69,8 @@ var Module = class _Module {
     return new _Module(
       this.name,
       newStatements,
-      [...this.exports],
-      [...this.imports],
-      __spreadValues({}, this.metadata)
+      __spreadValues({}, this.metadata),
+      __spreadValues({}, this.docs)
     );
   }
   insertStatement(index, statement) {
@@ -84,9 +82,8 @@ var Module = class _Module {
     return new _Module(
       this.name,
       newStatements,
-      [...this.exports],
-      [...this.imports],
-      __spreadValues({}, this.metadata)
+      __spreadValues({}, this.metadata),
+      __spreadValues({}, this.docs)
     );
   }
   replaceStatement(index, statement) {
@@ -98,9 +95,8 @@ var Module = class _Module {
     return new _Module(
       this.name,
       newStatements,
-      [...this.exports],
-      [...this.imports],
-      __spreadValues({}, this.metadata)
+      __spreadValues({}, this.metadata),
+      __spreadValues({}, this.docs)
     );
   }
   // └────────────────────────────────────────────────────────────────────┘

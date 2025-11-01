@@ -21,6 +21,13 @@ interface NameInfo {
     name: string;
     span: Span;
 }
+interface ModuleDocsInfo {
+    name: string;
+    desc: string;
+    repo: string;
+    docs: string;
+    footer: string;
+}
 declare abstract class Node {
     abstract readonly level: number;
     abstract readonly kind: string;
@@ -1038,11 +1045,10 @@ interface ModuleMetadata {
 declare class Module {
     name: string;
     statements: StmtNode[];
-    exports: string[];
-    imports: string[];
     metadata: ModuleMetadata;
-    constructor(name: string, statements: StmtNode[], exports: string[], imports: string[], metadata: ModuleMetadata);
-    static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata): Module;
+    docs: ModuleDocsInfo;
+    constructor(name: string, statements: StmtNode[], metadata: ModuleMetadata, docs: ModuleDocsInfo);
+    static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata, docs: ModuleDocsInfo): Module;
     validate(): boolean;
     findStatements(predicate: (stmt: StmtNode) => boolean): StmtNode[];
     findStatement(predicate: (stmt: StmtNode) => boolean): StmtNode | undefined;
@@ -1085,4 +1091,4 @@ declare class Program {
     getTotalNodes(): number;
 }
 
-export { ArrayAccessNode, ArrayTypeNode, AsNode, BinaryNode, BlockStmtNode, BreakStmtNode, CallNode, CaseNode, CatchNode, type ComptimeInfo, type ComptimeKind, ConditionalNode, ContinueStmtNode, DefStmtNode, DefaultNode, DeferStmtNode, DoStmtNode, EnumTypeNode, EnumVariantNode, ErrsetTypeNode, ExprNode, ExprTupleNode, FieldNode, ForStmtNode, FuncStmtNode, FunctionTypeNode, IdentNode, IfNode, LetStmtNode, LiteralNode, MatchNode, MemberAccessNode, Module, type MutabilityInfo, type MutabilityKind, type NameInfo, Node, ObjectNode, OptionalTypeNode, OrelseNode, ParenNode, ParenTypeNode, PointerTypeNode, PostfixNode, PrefixNode, PrimaryNode, PrimitiveTypeNode, Program, PropNode, RangeNode, ReturnStmtNode, SectionStmtNode, SizeofNode, type Span, StmtNode, StructMemberNode, StructTypeNode, TestStmtNode, ThrowStmtNode, TryNode, TupleTypeNode, TypeNode, TypeofNode, UnionTypeNode, UseStmtNode, type VisibilityInfo, type VisibilityKind, WhileStmtNode };
+export { ArrayAccessNode, ArrayTypeNode, AsNode, BinaryNode, BlockStmtNode, BreakStmtNode, CallNode, CaseNode, CatchNode, type ComptimeInfo, type ComptimeKind, ConditionalNode, ContinueStmtNode, DefStmtNode, DefaultNode, DeferStmtNode, DoStmtNode, EnumTypeNode, EnumVariantNode, ErrsetTypeNode, ExprNode, ExprTupleNode, FieldNode, ForStmtNode, FuncStmtNode, FunctionTypeNode, IdentNode, IfNode, LetStmtNode, LiteralNode, MatchNode, MemberAccessNode, Module, type ModuleDocsInfo, type MutabilityInfo, type MutabilityKind, type NameInfo, Node, ObjectNode, OptionalTypeNode, OrelseNode, ParenNode, ParenTypeNode, PointerTypeNode, PostfixNode, PrefixNode, PrimaryNode, PrimitiveTypeNode, Program, PropNode, RangeNode, ReturnStmtNode, SectionStmtNode, SizeofNode, type Span, StmtNode, StructMemberNode, StructTypeNode, TestStmtNode, ThrowStmtNode, TryNode, TupleTypeNode, TypeNode, TypeofNode, UnionTypeNode, UseStmtNode, type VisibilityInfo, type VisibilityKind, WhileStmtNode };
