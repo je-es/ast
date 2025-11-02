@@ -100,9 +100,9 @@ module.exports = __toCommonJS(ast_exports);
 // lib/components/Module.ts
 var Module = class _Module {
   // ┌──────────────────────────────── INIT ──────────────────────────────┐
-  constructor(name, statements, metadata, docs) {
+  constructor(name, stmts, metadata, docs) {
     this.name = name;
-    this.statements = statements;
+    this.stmts = stmts;
     this.metadata = metadata;
     this.docs = docs;
   }
@@ -116,7 +116,7 @@ var Module = class _Module {
       if (!this.name.trim()) {
         return false;
       }
-      return this.statements.every((stmt) => stmt.validate());
+      return this.stmts.every((stmt) => stmt.validate());
     } catch (e) {
       return false;
     }
@@ -124,18 +124,25 @@ var Module = class _Module {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── FIND ──────────────────────────────┐
   findStatements(predicate) {
-    return this.statements.filter(predicate);
+    return this.stmts.filter(predicate);
   }
   findStatement(predicate) {
-    return this.statements.find(predicate);
+    return this.stmts.find(predicate);
   }
   findStatementsByKind(kind) {
-    return this.statements.filter((stmt) => stmt.kind === kind);
+    return this.stmts.filter((stmt) => stmt.kind === kind);
   }
   findFunction(name) {
-    for (const stmt of this.statements) {
+    for (const stmt of this.stmts) {
       if (stmt.is("func") && stmt.getFunc().ident.name === name) {
         return stmt.getFunc();
+      } else if (stmt.is("section")) {
+        const section = stmt.getSection();
+        for (const stmt2 of section.stmts) {
+          if (stmt2.is("func") && stmt2.getFunc().ident.name === name) {
+            return stmt2.getFunc();
+          }
+        }
       }
     }
     return void 0;
@@ -143,10 +150,10 @@ var Module = class _Module {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── CTRL ──────────────────────────────┐
   removeStatement(index) {
-    if (index < 0 || index >= this.statements.length) {
-      throw new Error(`Statement index ${index} out of bounds (0-${this.statements.length - 1})`);
+    if (index < 0 || index >= this.stmts.length) {
+      throw new Error(`Statement index ${index} out of bounds (0-${this.stmts.length - 1})`);
     }
-    const newStatements = [...this.statements];
+    const newStatements = [...this.stmts];
     newStatements.splice(index, 1);
     return new _Module(
       this.name,
@@ -156,10 +163,10 @@ var Module = class _Module {
     );
   }
   insertStatement(index, statement) {
-    if (index < 0 || index > this.statements.length) {
-      throw new Error(`Statement index ${index} out of bounds (0-${this.statements.length})`);
+    if (index < 0 || index > this.stmts.length) {
+      throw new Error(`Statement index ${index} out of bounds (0-${this.stmts.length})`);
     }
-    const newStatements = [...this.statements];
+    const newStatements = [...this.stmts];
     newStatements.splice(index, 0, statement);
     return new _Module(
       this.name,
@@ -169,10 +176,10 @@ var Module = class _Module {
     );
   }
   replaceStatement(index, statement) {
-    if (index < 0 || index >= this.statements.length) {
-      throw new Error(`Statement index ${index} out of bounds (0-${this.statements.length - 1})`);
+    if (index < 0 || index >= this.stmts.length) {
+      throw new Error(`Statement index ${index} out of bounds (0-${this.stmts.length - 1})`);
     }
-    const newStatements = [...this.statements];
+    const newStatements = [...this.stmts];
     newStatements[index] = statement;
     return new _Module(
       this.name,
@@ -184,19 +191,19 @@ var Module = class _Module {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── ---- ──────────────────────────────┐
   isEmpty() {
-    return this.statements.length === 0;
+    return this.stmts.length === 0;
   }
   hasStatement(statement) {
-    return this.statements.includes(statement);
+    return this.stmts.includes(statement);
   }
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── ---- ──────────────────────────────┐
   getStatementCount() {
-    return this.statements.length;
+    return this.stmts.length;
   }
   getTotalNodes() {
     let count = 1;
-    for (const statement of this.statements) {
+    for (const statement of this.stmts) {
       const countt = 0;
       statement.traverse(() => void count++);
       count += countt;
@@ -204,17 +211,17 @@ var Module = class _Module {
     return count;
   }
   getStatementAt(index) {
-    if (index < 0 || index >= this.statements.length) {
+    if (index < 0 || index >= this.stmts.length) {
       return void 0;
     }
-    return this.statements[index];
+    return this.stmts[index];
   }
   getStatementIndex(statement) {
-    return this.statements.indexOf(statement);
+    return this.stmts.indexOf(statement);
   }
   getPublicStatements() {
     const arr = [];
-    for (const stmt of this.statements) {
+    for (const stmt of this.stmts) {
       if (stmt.is("let") && stmt.getLet().field.visibility.kind !== "Private" || stmt.is("def") && stmt.getDef().visibility.kind !== "Private" || stmt.is("func") && stmt.getFunc().visibility.kind !== "Private") {
         arr.push(stmt);
       }
@@ -276,7 +283,7 @@ var Program = class _Program {
   // └────────────────────────────────────────────────────────────────────┘
   // ┌──────────────────────────────── ---- ──────────────────────────────┐
   isEmpty() {
-    return this.modules.size === 0 || Array.from(this.modules.values()).every((m) => m.statements.length === 0);
+    return this.modules.size === 0 || Array.from(this.modules.values()).every((m) => m.stmts.length === 0);
   }
   hasModule(name) {
     return this.modules.has(name);
@@ -293,7 +300,7 @@ var Program = class _Program {
     return this.modules.size;
   }
   getTotalStatements() {
-    return Array.from(this.modules.values()).reduce((total, module2) => total + module2.statements.length, 0);
+    return Array.from(this.modules.values()).reduce((total, module2) => total + module2.stmts.length, 0);
   }
   getTotalNodes() {
     let count = this.modules.size;

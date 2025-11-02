@@ -6,7 +6,8 @@
 
 // ╔════════════════════════════════════════ PACK ════════════════════════════════════════╗
 
-    import { StmtNode, StmtKind }   from '../nodes/level-1/StmtNode';
+    import { SectionStmtNode } from '../ast';
+import { StmtNode, StmtKind }   from '../nodes/level-1/StmtNode';
     import { FuncStmtNode }         from '../nodes/level-3/StmtNodes/FuncStmtNode';
     import { ModuleDocsInfo }       from '../nodes/node';
 
@@ -35,7 +36,7 @@
 
             constructor(
                 public name         : string,
-                public statements   : StmtNode[],
+                public stmts        : StmtNode[],
                 public metadata     : ModuleMetadata,
                 public docs         : ModuleDocsInfo,
             ) { }
@@ -55,7 +56,7 @@
                     if (!this.name.trim()) {return false;}
 
                     // Validate all statements
-                    return this.statements.every(stmt => stmt.validate());
+                    return this.stmts.every(stmt => stmt.validate());
                 } catch {
                     return false;
                 }
@@ -67,21 +68,29 @@
         // ┌──────────────────────────────── FIND ──────────────────────────────┐
 
             findStatements(predicate: (stmt: StmtNode) => boolean): StmtNode[] {
-                return this.statements.filter(predicate);
+                return this.stmts.filter(predicate);
             }
 
             findStatement(predicate: (stmt: StmtNode) => boolean): StmtNode | undefined {
-                return this.statements.find(predicate);
+                return this.stmts.find(predicate);
             }
 
             findStatementsByKind(kind: StmtKind): StmtNode[] {
-                return this.statements.filter(stmt => stmt.kind === kind);
+                return this.stmts.filter(stmt => stmt.kind === kind);
             }
 
             findFunction(name: string): FuncStmtNode | undefined {
-                for (const stmt of this.statements) {
+                for (const stmt of this.stmts) {
                     if (stmt.is('func') && stmt.getFunc()!.ident.name === name) {
                         return stmt.getFunc();
+                    } else if(stmt.is('section')) {
+                        const section = stmt.getSection()!;
+
+                        for (const stmt of section.stmts) {
+                            if (stmt.is('func') && stmt.getFunc()!.ident.name === name) {
+                                return stmt.getFunc();
+                            }
+                        }
                     }
                 }
                 return undefined;
@@ -93,11 +102,11 @@
         // ┌──────────────────────────────── CTRL ──────────────────────────────┐
 
             removeStatement(index: number): Module {
-                if (index < 0 || index >= this.statements.length) {
-                    throw new Error(`Statement index ${index} out of bounds (0-${this.statements.length - 1})`);
+                if (index < 0 || index >= this.stmts.length) {
+                    throw new Error(`Statement index ${index} out of bounds (0-${this.stmts.length - 1})`);
                 }
 
-                const newStatements = [...this.statements];
+                const newStatements = [...this.stmts];
                 newStatements.splice(index, 1);
                 return new Module(
                     this.name,
@@ -108,11 +117,11 @@
             }
 
             insertStatement(index: number, statement: StmtNode): Module {
-                if (index < 0 || index > this.statements.length) {
-                    throw new Error(`Statement index ${index} out of bounds (0-${this.statements.length})`);
+                if (index < 0 || index > this.stmts.length) {
+                    throw new Error(`Statement index ${index} out of bounds (0-${this.stmts.length})`);
                 }
 
-                const newStatements = [...this.statements];
+                const newStatements = [...this.stmts];
                 newStatements.splice(index, 0, statement);
                 return new Module(
                     this.name,
@@ -123,11 +132,11 @@
             }
 
             replaceStatement(index: number, statement: StmtNode): Module {
-                if (index < 0 || index >= this.statements.length) {
-                    throw new Error(`Statement index ${index} out of bounds (0-${this.statements.length - 1})`);
+                if (index < 0 || index >= this.stmts.length) {
+                    throw new Error(`Statement index ${index} out of bounds (0-${this.stmts.length - 1})`);
                 }
 
-                const newStatements = [...this.statements];
+                const newStatements = [...this.stmts];
                 newStatements[index] = statement;
                 return new Module(
                     this.name,
@@ -143,11 +152,11 @@
         // ┌──────────────────────────────── ---- ──────────────────────────────┐
 
             isEmpty(): boolean {
-                return this.statements.length === 0;
+                return this.stmts.length === 0;
             }
 
             hasStatement(statement: StmtNode): boolean {
-                return this.statements.includes(statement);
+                return this.stmts.includes(statement);
             }
 
         // └────────────────────────────────────────────────────────────────────┘
@@ -156,12 +165,12 @@
         // ┌──────────────────────────────── ---- ──────────────────────────────┐
 
             getStatementCount(): number {
-                return this.statements.length;
+                return this.stmts.length;
             }
 
             getTotalNodes(): number {
                 let count = 1; // Count self
-                for (const statement of this.statements) {
+                for (const statement of this.stmts) {
                     const countt = 0;
                     statement.traverse(() => void (count++));
                     count += countt;
@@ -170,20 +179,20 @@
             }
 
             getStatementAt(index: number): StmtNode | undefined {
-                if (index < 0 || index >= this.statements.length) {
+                if (index < 0 || index >= this.stmts.length) {
                     return undefined;
                 }
-                return this.statements[index];
+                return this.stmts[index];
             }
 
             getStatementIndex(statement: StmtNode): number {
-                return this.statements.indexOf(statement);
+                return this.stmts.indexOf(statement);
             }
 
             getPublicStatements(): StmtNode[] {
                 const arr : StmtNode[] = [];
 
-                for (const stmt of this.statements) {
+                for (const stmt of this.stmts) {
                     if(
                         (stmt.is('let')     && stmt.getLet()!.field.visibility.kind !== 'Private') ||
                         (stmt.is('def')     && stmt.getDef()!.visibility.kind  !== 'Private') ||

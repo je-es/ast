@@ -1044,10 +1044,10 @@ interface ModuleMetadata {
 }
 declare class Module {
     name: string;
-    statements: StmtNode[];
+    stmts: StmtNode[];
     metadata: ModuleMetadata;
     docs: ModuleDocsInfo;
-    constructor(name: string, statements: StmtNode[], metadata: ModuleMetadata, docs: ModuleDocsInfo);
+    constructor(name: string, stmts: StmtNode[], metadata: ModuleMetadata, docs: ModuleDocsInfo);
     static create(name: string, stmts: StmtNode[], metadata: ModuleMetadata, docs: ModuleDocsInfo): Module;
     validate(): boolean;
     findStatements(predicate: (stmt: StmtNode) => boolean): StmtNode[];

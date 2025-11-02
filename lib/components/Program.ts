@@ -97,7 +97,7 @@
 
             isEmpty(): boolean {
                 return this.modules.size === 0 ||
-                    Array.from(this.modules.values()).every(m => m.statements.length === 0);
+                    Array.from(this.modules.values()).every(m => m.stmts.length === 0);
             }
 
             hasModule(name: string): boolean {
@@ -123,7 +123,7 @@
 
             getTotalStatements(): number {
                 return Array.from(this.modules.values())
-                    .reduce((total, module) => total + module.statements.length, 0);
+                    .reduce((total, module) => total + module.stmts.length, 0);
             }
 
             getTotalNodes(): number {
