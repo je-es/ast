@@ -7,7 +7,7 @@
 // ╔════════════════════════════════════════ TEST ════════════════════════════════════════╗
 
     describe("ComprehensiveTests", () => {
-        it("Already tested in the `@kemet-lang/rules` package", () => {
+        it("Already tested in the `@kemet-lang/sesh` package", () => {
             expect(true).toBe(true);
         });
     });

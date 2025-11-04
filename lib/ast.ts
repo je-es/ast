@@ -1,4 +1,4 @@
-// ast.ts — A library for building and managing Abstract Syntax Trees.
+// ast.ts — Defines the central Abstract Syntax Tree (AST) used for analysis, transformation, and code generation.
 //
 // repo   : https://github.com/je-es/ast
 // author : https://github.com/maysara-elshewehy

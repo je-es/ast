@@ -1,7 +1,7 @@
 {
 	"name": "@je-es/ast",
-	"version": "0.1.4",
-	"description": "A library for building and managing Abstract Syntax Trees.",
+	"version": "0.1.5",
+	"description": "Defines the central Abstract Syntax Tree (AST) used for analysis, transformation, and code generation.",
 	"keywords": [ "je-es", "ast", "abstract", "syntax", "tree" ],
 	"license": "MIT",
 	"main": "./dist/ast.js",
@@ -39,7 +39,5 @@
 		"@eslint/js": "^9.34.0",
 		"@stylistic/eslint-plugin": "^5.3.1",
 		"typescript-eslint": "^8.42.0"
-	},
-	"dependencies": {
 	}
 }
