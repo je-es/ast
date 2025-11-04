@@ -68,9 +68,10 @@
             public level = 2;
 
             constructor(
-                public kind : ExprKind,
-                public span : Span,
-                public data : ExprTypes,
+                public kind         : ExprKind,
+                public span         : Span,
+                public data         : ExprTypes,
+                public inferredType?: TypeNode
             ) { super(); }
 
         // └────────────────────────────────────────────────────────────────────┘

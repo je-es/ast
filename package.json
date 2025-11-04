@@ -1,6 +1,6 @@
 {
 	"name": "@je-es/ast",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"description": "Defines the central Abstract Syntax Tree (AST) used for analysis, transformation, and code generation.",
 	"keywords": [ "je-es", "ast", "abstract", "syntax", "tree" ],
 	"license": "MIT",

@@ -2947,11 +2947,12 @@ var SizeofNode = class _SizeofNode extends Node {
 
 // lib/nodes/level-2/ExprNode.ts
 var ExprNode = class _ExprNode extends Node {
-  constructor(kind, span, data) {
+  constructor(kind, span, data, inferredType) {
     super();
     this.kind = kind;
     this.span = span;
     this.data = data;
+    this.inferredType = inferredType;
     // ┌──────────────────────────────── INIT ──────────────────────────────┐
     this.level = 2;
   }

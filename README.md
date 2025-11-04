@@ -13,7 +13,7 @@
         Serves as the central data structure for parsing, analysis, transformation, and code generation.
         <br>
     </p>
-    <img src="https://img.shields.io/badge/Version-0.1.5-black"/>
+    <img src="https://img.shields.io/badge/Version-0.1.6-black"/>
     <a href="https://github.com/je-es"><img src="https://img.shields.io/badge/Part_of-@je--es-black"/></a>
     <a href="https://github.com/kemet-lang"><img src="https://img.shields.io/badge/Built_for-@kemet--lang-black"/></a>
 </div>

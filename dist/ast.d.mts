@@ -698,8 +698,9 @@ declare class ExprNode extends Node {
     kind: ExprKind;
     span: Span;
     data: ExprTypes;
+    inferredType?: TypeNode | undefined;
     level: number;
-    constructor(kind: ExprKind, span: Span, data: ExprTypes);
+    constructor(kind: ExprKind, span: Span, data: ExprTypes, inferredType?: TypeNode | undefined);
     getChildrenNodes(): Node[];
     clone(newSpan?: Span): ExprNode;
     getPrimary(): PrimaryNode | undefined;
